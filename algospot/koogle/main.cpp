@@ -17,8 +17,7 @@ vector<string> pw;
 void getInput() {
     pw.clear();
     cin >> n;
-    char b[10];
-    gets(b);
+    cin.get();
     for (int i = 0; i < n; i++) {
         string s;
         getline(std::cin, s);
