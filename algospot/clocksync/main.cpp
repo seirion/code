@@ -1,9 +1,10 @@
 // http://algospot.com/judge/problem/read/CLOCKSYNC
 #include <iostream>
+#include <cstdio>
 
 using namespace std;
 
-int sw [] = { // switch
+unsigned int sw [] = { // switch
     7,      //    {0, 1, 2},
     2696,   //    {3, 7, 9, 11},
     50192,  //    {4, 10, 14, 15},
@@ -31,20 +32,21 @@ void getInput() {
 }
 
 unsigned int move(int index, unsigned int st) {
-    int r = sw[index];
+    unsigned int r = sw[index];
     while (r) {
-        int i = __builtin_ctz(r) * 2;
-        r &= r - 1;
+        unsigned int i = __builtin_ctz(r) * 2;
 
-        int current = st + (0x1 << i);
+        unsigned int current = (st & (3 << i)) + (1 << i);
         st &= ~(0x3 << i);
-        st |= current & (0x3 << i);
+        st |= current & (3 << i);
+
+        r &= r - 1;
     }
     return st;
 }
 
 
-void test(int c, int index, int st) {
+void test(int c, int index, unsigned int st) {
     if (c >= count) return;
     if (index == 10) return;
     if (st == 0) {
@@ -63,7 +65,7 @@ void solve() {
     count = 500;
     unsigned int st = state;
     for (int i = 0; i < 4; i++) {
-        test(i, 0, st);
+        test(i, 1, st);
         st = move(0, st);
     }
 
