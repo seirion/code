@@ -48,11 +48,11 @@ unsigned int move(int index, unsigned int st) {
 
 void test(int c, int index, unsigned int st) {
     if (c >= count) return;
-    if (index == 10) return;
     if (st == 0) {
         count = c;
         return;
     }
+    if (index == 10) return;
 
     for (int i = 0; i < 4; i++) {
         test(c + i, index + 1, st);
