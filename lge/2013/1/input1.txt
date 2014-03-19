@@ -1,0 +1,13 @@
+11 15
+Browser0 1  22  10
+Chrome0 1  23  28
+Video0 1  29  11
+GoogleMap0 1  17  13
+Facebook0 1  10  0
+WindRunner0 1  30  25
+Twitter0 1  2  5
+RealRacing0 1  8  16
+Youtube0 1  10  3
+KaKaoTalk0 1  13  8
+Office0 1  8  1
+Idle 1  13  29

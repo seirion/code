@@ -1,0 +1,29 @@
+1
+Idle 59.6%
+Chrome 21.3%
+Browser 2.1%
+Facebook 2.1%
+GoogleMap 2.1%
+KaKaoTalk 2.1%
+RealRacing 2.1%
+Twitter 2.1%
+Video 2.1%
+WindRunner 2.1%
+Youtube 2.1%
+11
+Chrome 26.4%
+KaKaoTalk 22.8%
+Facebook 20.3%
+Video 20.3%
+Idle 5.1%
+WindRunner 5.1%
+25
+WindRunner 37.3%
+Youtube 21.3%
+Facebook 17.4%
+Idle 17.1%
+Chrome 6.9%
+40
+Chrome 64.8%
+Video 25.9%
+Idle 9.3%

@@ -1,0 +1,14 @@
+11
+Idle 35.1%
+Chrome0 18.5%
+WindRunner0 12.5%
+GoogleMap0 11.8%
+KaKaoTalk0 9.6%
+Browser0 6.8%
+Video0 5.7%
+15
+Chrome0 33.4%
+WindRunner0 22.6%
+GoogleMap0 21.3%
+Browser0 12.4%
+Video0 10.3%
