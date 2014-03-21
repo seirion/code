@@ -2,32 +2,30 @@
 #include <iostream>
 #include <cstring>
 #include <cstdio>
+#include <cmath>
 
 using namespace std;
 
 int n;
 
-
-void processing(char *buffer, size_t size, int &length, int &count) {
-}
-
-void getInput() {
+void solve() {
     enum {READY, ING, CONTINUE};
 
     cin >> n;
     cin.get();
-    char buffer[81];
+    char buffer[1000];
 
     int length(0), count(0);
     int state = READY;
     for (int i = 0; i < n; i++) {
         gets(buffer);
         size_t size = strlen(buffer);
+        if (size == 0) state = READY;
         for (int j = 0; j < size; j++) {
             char ch = buffer[j];
             switch (state) {
             case READY:
-                if (ch >= 'a') {
+                if ('a' <= ch && ch <= 'z') {
                     length++; count++;
                     state = ING;
                 }
@@ -66,18 +64,15 @@ void getInput() {
         if (state != CONTINUE) state = READY;
     }
 
-    length = (length * 10000 + 5 ) / count;
-    printf("%d.%04d\n", length / 10000, length % 10000);
+    length = ((length * 10000) / count + 5) / 10;
+    printf("%d.%03d\n", length / 1000, length % 1000);
+    //printf("%.03f\n", floor((length / (double)count + 0.0005) * 1000) / 1000);
 }
 
-void solve() {
-
-
-}
 
 int main() {
     int num;
     cin >> num;
-    for (int i = 0; i < num; i++) {getInput(); solve();}
+    for (int i = 0; i < num; i++) {solve();}
     return 0;
 }
