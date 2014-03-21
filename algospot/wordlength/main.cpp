@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cstring>
 #include <cstdio>
-#include <cmath>
 
 using namespace std;
 
@@ -25,7 +24,7 @@ void solve() {
             char ch = buffer[j];
             switch (state) {
             case READY:
-                if ('a' <= ch && ch <= 'z') {
+                if ('a' <= ch) {
                     length++; count++;
                     state = ING;
                 }
@@ -49,9 +48,7 @@ void solve() {
                     state = READY;
                 }
                 else if (ch == '-') {
-                    if (j + 1 != size) {
-                        state = READY;
-                    }
+                    state = READY;
                 }
                 else { // 'a' ~
                     length++;
@@ -66,7 +63,6 @@ void solve() {
 
     length = ((length * 10000) / count + 5) / 10;
     printf("%d.%03d\n", length / 1000, length % 1000);
-    //printf("%.03f\n", floor((length / (double)count + 0.0005) * 1000) / 1000);
 }
 
 
