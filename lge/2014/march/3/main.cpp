@@ -34,7 +34,7 @@ void getInput() {
 void push(map<string, set<int> > &m, int length) {
     size_t s = in.size();
     for (int i = 0; i < s; i++) {
-        if (result[i]) continue;
+        //if (result[i]) continue;
 
         int to = in[i].size() - length;
         for (int j = 0; j <= to; j++) {
