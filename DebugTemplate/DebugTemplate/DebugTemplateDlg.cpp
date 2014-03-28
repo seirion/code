@@ -99,7 +99,7 @@ HCURSOR CDebugTemplateDlg::OnQueryDragIcon()
 void CDebugTemplateDlg::OnTimer(UINT_PTR nIDEvent)
 {
     KillTimer(nIDEvent);
-    test_main(0, 0);
+    main(0, 0);
     //OnBnClickedRun();
 }
 
@@ -124,7 +124,7 @@ void CDebugTemplateDlg::OnBnClickedRun()
     }
     argv[argc] = NULL;
 
-    test_main(argc, argv);
+    main(argc, argv);
 }
 
 
