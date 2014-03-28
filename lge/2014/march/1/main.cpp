@@ -27,11 +27,14 @@ typedef map<int, set<Line> > map_type;
 map<int, set<Line> > hor; // horizontal (y)
 map<int, set<Line> > ver; // vertical (x)
 
-const size_t BOARD_SIZE = 5000;
+const size_t BOARD_SIZE = 20000;
 int **board;
 
 map <int, int> index_map_x; // index map x (value - index)
 map <int, int> index_map_y; // index map y (value - index)
+
+map <int, int> value_map_x; // index map x (index - value)
+map <int, int> value_map_y; // index map y (index - value)
 
 int count = 0;
 int maxArea = 0;
@@ -59,6 +62,14 @@ void makeIndexMap(map_type &m, map<int, int> &index_map) {
     }
 }
 
+void makeValueMap(map_type &m, map<int, int> &index_map) {
+    map<int, set<Line> >::iterator i = m.begin();
+    int index = 0;
+    for (; i != m.end(); i++) {
+        index_map[index++] = i->first;
+    }
+}
+
 void getInput() {
     scanf("%d", &n);
     int left, top, right, bottom;
@@ -73,14 +84,16 @@ void getInput() {
     makeIndexMap(hor, index_map_y);
     makeIndexMap(ver, index_map_x);
 
+    makeValueMap(hor, value_map_y);
+    makeValueMap(ver, value_map_x);
+
 #if 0
-    /// test
-    cout << " ------- " << endl;
+    trace(" ------- \n");
     map<int, int>::iterator p = index_map_x.begin();
     for (; p != index_map_x.end(); p++) {
-        cout << p->first << " ";
+        trace("%d ", p->first);
     }
-    cout << endl;
+    trace("\n");
 #endif
 
 }
@@ -88,6 +101,10 @@ void getInput() {
 
 int indexof(map<int, int> &index_map, int key) {
     return index_map[key];
+}
+
+int valueof(map<int, int> &value_map, int key) {
+    return value_map[key];
 }
 
 void push_hor(map_type &m) {
@@ -118,18 +135,67 @@ void push_ver(map_type &m) {
     }
 }
 
-void check() {
+int exist(int row, int from, int to) { // return height
     int size = n * 2;
-    for (int row = 0; row < size; row++) {
+    for (int i = row + 1; i < size; i++) {
+        if (board[i][from] > 1 && board[i][to] > 1) return (i - row);
+    }
+    return 0; // not exist
+}
+
+int simpleArea(int top, int bottom, int left, int right) {
+    int width = valueof(value_map_x, right) - valueof(value_map_x, left);
+    int height = valueof(value_map_y, bottom) - valueof(value_map_y, top);
+    return width * height;
+}
+
+int getArea(int top, int bottom, int left, int right) {
+    //int width = valueof(value_map_x, right) - valueof(value_map_x, left);
+    //int height = valueof(value_map_y, bottom) - valueof(value_map_y, top);
+    //int area = width * height;
+    int area = simpleArea(top, bottom, left, right);
+
+    // overlaped
+    int size = n * 2;
+    for (int row = top; row <= bottom ; row++) {
         int from = -1;
-        for (int col = 0; col < size; col++) {
+        int to;
+        for (int col = left; col <= right; col++) {
             if (board[row][col] <= 1) continue;
             if (from == -1) from = col;
             else {
                 to = col;
+                if (from == left && to == right) continue;
+                int height = exist(row, from, to);
+                if (height > 0) {
+                    area -= simpleArea(row, row + height, from, to);
+                }
+            }
+        }
+    }
 
+    return area;
+}
 
-                from = -1;
+void check() {
+    int size = n * 2;
+    for (int row = 0; row < size; row++) {
+        int from = -1;
+        int to;
+        for (int col = 0; col < size; col++) {
+            if (board[row][col] <= 1) continue;
+            if (from == -1) from = col;
+            else { // exist another ?
+                to = col;
+                int height = exist(row, from, to);
+                if (height > 0) {
+                    //trace("---- %d   %d %d     %d\n", row, from, to, height);
+                    count++;
+                    int area = getArea(row, row + height, from, to);
+                    // FIXME
+                    maxArea = max(maxArea, area);
+                    from = col; // init
+                }
             }
         }
     }
@@ -139,16 +205,17 @@ void check() {
 void solve() {
     push_hor(hor);
     push_ver(ver);
+    check();
 
-
+#if 0
     for (int i = 0; i < hor.size(); i++) { // debug
         for (int j = 0; j < ver.size(); j++) {
-            cout << board[i][j] << " ";
+            trace("%d ", board[i][j]);
         }
-        cout << endl;
+        trace("\n");
     }
-
-    check();
+#endif
+    trace("%d %d\n", count, maxArea);
 }
 
 
