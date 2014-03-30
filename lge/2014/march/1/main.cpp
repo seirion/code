@@ -11,8 +11,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <set>
 #include <vector>
-#include <algorithm>
 #include <map>
 #include <set>
 
@@ -25,13 +25,12 @@ public:
     bool operator<(const Line &l) const {return from < l.from;}
 };
 
-typedef map<int, vector<Line> > map_type;
-map<int, vector<Line> > hor; // horizontal (y)
-map<int, vector<Line> > ver; // vertical (x)
+typedef map<int, set<Line> > map_type;
+map<int, set<Line> > hor; // horizontal (y)
+map<int, set<Line> > ver; // vertical (x)
 
-const size_t BOARD_SIZE = 10000;
-set<int> board[BOARD_SIZE];
-set<int> board_temp[BOARD_SIZE];
+const size_t BOARD_SIZE = 1400;
+set<int> board[BOARD_SIZE]; // org
 
 map <int, int> index_map_x; // index map x (value - index)
 map <int, int> index_map_y; // index map y (value - index)
@@ -46,19 +45,20 @@ int maxArea = 0;
 int n;
 
 void print(map_type &m) {
-    map<int, vector<Line> >::iterator i = m.begin();
+    map<int, set<Line> >::iterator i = m.begin();
     for (; i != m.end(); i++) {
         cout << i->first << " : " << endl;
         
-        vector<Line>::iterator j = i->second.begin();
+        set<Line>::iterator j = i->second.begin();
         for (; j != i->second.end(); j++) {
             cout << "     " << j->from << " " << j->to << endl;
         }
     }
 }
 
+
 void makeIndexValueMap(map_type &m, map<int, int> &index_map, map<int, int> &value_map) {
-    map<int, vector<Line> >::iterator i = m.begin();
+    map<int, set<Line> >::iterator i = m.begin();
     int index = 0;
     for (; i != m.end(); i++, index++) {
         index_map[i->first] = index;
@@ -67,14 +67,14 @@ void makeIndexValueMap(map_type &m, map<int, int> &index_map, map<int, int> &val
 }
 
 void getInput() {
-    scanf("%d", &n);
     int left, top, right, bottom;
+    scanf("%d", &n);
     for (int i = 0; i < n; i++) {
         scanf("%d %d %d %d", &left, &top, &right, &bottom);
-        hor[top].push_back(Line(left, right));
-        hor[bottom].push_back(Line(left, right));
-        ver[left].push_back(Line(top, bottom));
-        ver[right].push_back(Line(top, bottom));
+        hor[top].insert(Line(left, right));
+        hor[bottom].insert(Line(left, right));
+        ver[left].insert(Line(top, bottom));
+        ver[right].insert(Line(top, bottom));
     }
 
     makeIndexValueMap(hor, index_map_y, value_map_y);
@@ -90,49 +90,12 @@ int valueof(map<int, int> &value_map, int key) {
     return value_map[key];
 }
 
-void push_hor(map_type &m) {
-    map<int, vector<Line> >::iterator i = m.begin();
-    int row = 0;
-    for (; i != m.end(); i++, row++) {
-        vector<Line>::iterator j = i->second.begin();
-        for (; j != i->second.end(); j++) {
-            int from = indexof(index_map_x, j->from);
-            int to = indexof(index_map_x, j->to);
-            for (int k = from; k <= to; k++) {
-                if (board_temp[row].find(k) == board_temp[row].end()) {
-                    board_temp[row].insert(k); // vertex
-                }
-                else {
-                    board[row].insert(k); // real point
-                }
-            }
-        }
-    }
-}
-
-void push_ver(map_type &m) {
-    map<int, vector<Line> >::iterator i = m.begin();
-    int col = 0;
-    for (; i != m.end(); i++, col++) {
-        vector<Line>::iterator j = i->second.begin();
-        for (; j != i->second.end(); j++) {
-            int from = indexof(index_map_y, j->from);
-            int to = indexof(index_map_y, j->to);
-            for (int k = from; k <= to; k++)
-                if (board_temp[k].find(col) == board_temp[k].end()) {
-                    board_temp[k].insert(col); // vertex
-                }
-                else {
-                    board[k].insert(col); // real point
-                }
-        }
-    }
-}
-
 int exist(int row, int from, int to) { // return height
     int size = n * 2;
     for (int i = row + 1; i < size; i++) {
-        if (board[i].find(from) != board[i].end() && board[i].find(to) != board[i].end()) return i - row;
+        if (board[i].find(from) != board[i].end() && board[i].find(to) != board[i].end()) {
+            return i - row;
+        }
     }
     return 0; // not exist
 }
@@ -146,9 +109,10 @@ int simpleArea(int top, int bottom, int left, int right) {
 int getArea(int top, int bottom, int left, int right) {
     int area = simpleArea(top, bottom, left, right);
 
+    //trace("%d %d %d %d\n", top, bottom, left, right);
     // handle overlaped
     int size = n * 2;
-    for (int row = top; row <= bottom ; row++) {
+    for (int row = top; row < bottom ; row++) {
         int from = -1;
         int to;
         set<int>::const_iterator col = board[row].begin();
@@ -161,8 +125,12 @@ int getArea(int top, int bottom, int left, int right) {
                 to = *col;
                 if (from == left && to == right) continue;
                 int height = exist(row, from, to);
-                if (height > 0) {
-                    area -= simpleArea(row, row + height, from, to);
+                if (height > 0 && row + height <= bottom) {
+                    area -= getArea(row, row + height, from, to);
+                    from = *col; // init
+                }
+                else {
+                    from = *col; // init
                 }
             }
         }
@@ -194,9 +162,44 @@ void check() {
 }
 
 
+void push_ver(int row, int from, int to) {
+    map<int, set<Line> >::iterator i = ver.begin();
+    for (; i != ver.end(); i++) {
+        if (i->first >= from) break;
+    }
+
+    for (; i != ver.end(); i++) {
+        if (to < i->first) break;
+        int _col = indexof(index_map_x, i->first);
+        set<Line> &lines = i->second;
+        set<Line>::const_iterator it = lines.begin();
+        for (; it != lines.end(); it++) {
+            if (it->from <= row && row <= it->to) {
+                board[indexof(index_map_y, row)].insert(_col);
+            }
+        }
+    }
+}
+
+void push_row() {
+    // left - right
+    map<int, set<Line> >::iterator i = hor.begin();
+    for (; i != hor.end(); i++) {
+        int row = i->first;
+        set<Line> &lines = i->second;
+        set<Line>::const_iterator it = lines.begin();
+        for (; it != lines.end(); it++) {
+            int _row = indexof(index_map_y, row);
+            board[_row].insert(indexof(index_map_x, it->from));
+            board[_row].insert(indexof(index_map_x, it->to));
+
+            push_ver(row, it->from, it->to);
+        }
+    }
+}
+
 void solve() {
-    push_hor(hor);
-    push_ver(ver);
+    push_row();
     check();
 
     trace("%d %d\n", _count, maxArea);
