@@ -11,6 +11,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <vector>
+#include <algorithm>
 #include <map>
 #include <set>
 
@@ -23,9 +25,9 @@ public:
     bool operator<(const Line &l) const {return from < l.from;}
 };
 
-typedef map<int, set<Line> > map_type;
-map<int, set<Line> > hor; // horizontal (y)
-map<int, set<Line> > ver; // vertical (x)
+typedef map<int, vector<Line> > map_type;
+map<int, vector<Line> > hor; // horizontal (y)
+map<int, vector<Line> > ver; // vertical (x)
 
 const size_t BOARD_SIZE = 10000;
 set<int> board[BOARD_SIZE];
@@ -37,37 +39,30 @@ map <int, int> index_map_y; // index map y (value - index)
 map <int, int> value_map_x; // index map x (index - value)
 map <int, int> value_map_y; // index map y (index - value)
 
-int count = 0;
+int _count = 0;
 int maxArea = 0;
 
 ///////////////////////////////////////////////////////////////////////
 int n;
 
 void print(map_type &m) {
-    map<int, set<Line> >::iterator i = m.begin();
+    map<int, vector<Line> >::iterator i = m.begin();
     for (; i != m.end(); i++) {
         cout << i->first << " : " << endl;
         
-        set<Line>::iterator j = i->second.begin();
+        vector<Line>::iterator j = i->second.begin();
         for (; j != i->second.end(); j++) {
             cout << "     " << j->from << " " << j->to << endl;
         }
     }
 }
 
-void makeIndexMap(map_type &m, map<int, int> &index_map) {
-    map<int, set<Line> >::iterator i = m.begin();
+void makeIndexValueMap(map_type &m, map<int, int> &index_map, map<int, int> &value_map) {
+    map<int, vector<Line> >::iterator i = m.begin();
     int index = 0;
-    for (; i != m.end(); i++) {
-        index_map[i->first] = index++;
-    }
-}
-
-void makeValueMap(map_type &m, map<int, int> &index_map) {
-    map<int, set<Line> >::iterator i = m.begin();
-    int index = 0;
-    for (; i != m.end(); i++) {
-        index_map[index++] = i->first;
+    for (; i != m.end(); i++, index++) {
+        index_map[i->first] = index;
+        value_map[index] = i->first;
     }
 }
 
@@ -76,17 +71,14 @@ void getInput() {
     int left, top, right, bottom;
     for (int i = 0; i < n; i++) {
         scanf("%d %d %d %d", &left, &top, &right, &bottom);
-        hor[top].insert(Line(left, right));
-        hor[bottom].insert(Line(left, right));
-        ver[left].insert(Line(top, bottom));
-        ver[right].insert(Line(top, bottom));
+        hor[top].push_back(Line(left, right));
+        hor[bottom].push_back(Line(left, right));
+        ver[left].push_back(Line(top, bottom));
+        ver[right].push_back(Line(top, bottom));
     }
 
-    makeIndexMap(hor, index_map_y);
-    makeIndexMap(ver, index_map_x);
-
-    makeValueMap(hor, value_map_y);
-    makeValueMap(ver, value_map_x);
+    makeIndexValueMap(hor, index_map_y, value_map_y);
+    makeIndexValueMap(ver, index_map_x, value_map_x);
 }
 
 
@@ -99,10 +91,10 @@ int valueof(map<int, int> &value_map, int key) {
 }
 
 void push_hor(map_type &m) {
-    map<int, set<Line> >::iterator i = m.begin();
+    map<int, vector<Line> >::iterator i = m.begin();
     int row = 0;
     for (; i != m.end(); i++, row++) {
-        set<Line>::iterator j = i->second.begin();
+        vector<Line>::iterator j = i->second.begin();
         for (; j != i->second.end(); j++) {
             int from = indexof(index_map_x, j->from);
             int to = indexof(index_map_x, j->to);
@@ -119,10 +111,10 @@ void push_hor(map_type &m) {
 }
 
 void push_ver(map_type &m) {
-    map<int, set<Line> >::iterator i = m.begin();
+    map<int, vector<Line> >::iterator i = m.begin();
     int col = 0;
     for (; i != m.end(); i++, col++) {
-        set<Line>::iterator j = i->second.begin();
+        vector<Line>::iterator j = i->second.begin();
         for (; j != i->second.end(); j++) {
             int from = indexof(index_map_y, j->from);
             int to = indexof(index_map_y, j->to);
@@ -191,7 +183,7 @@ void check() {
                 to = *col;
                 int height = exist(row, from, to);
                 if (height > 0) {
-                    count++;
+                    _count++;
                     int area = getArea(row, row + height, from, to);
                     maxArea = max(maxArea, area);
                     from = *col; // init
@@ -207,7 +199,7 @@ void solve() {
     push_ver(ver);
     check();
 
-    trace("%d %d\n", count, maxArea);
+    trace("%d %d\n", _count, maxArea);
 }
 
 
