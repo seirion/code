@@ -1,0 +1,16 @@
+2 
+6 4 
+dark
+date
+dave
+doc 
+doc 
+dock
+7 3 
+ab 
+ab 
+ac 
+acc 
+bc 
+c 
+cba
