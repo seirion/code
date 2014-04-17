@@ -3,12 +3,16 @@
 #include <cstdio>
 #include <cstring>
 #include <vector>
+#include <set>
+#include <algorithm>
 
 using namespace std;
 
+
 char in[5][5];
 int n;
-vector<string> str;
+char str[10][11];
+set<string> mem[5][5];
 
 void getInput() {
     int i, j;
@@ -20,17 +24,14 @@ void getInput() {
     cin >> n;
     cin.get();
     char buffer[16];
-    str.clear();
     for (i = 0; i < n; i++) {
-        gets(buffer);
-        str.push_back(string(buffer));
+        gets(str[i]);
     }
 }
 
-bool each(const string &s, size_t index, int r, int c) {
-    if (s.size() == index) {
-        return true;
-    }
+void put(char *buffer, set<string> &node, int r, int c, int length) {
+    node.insert(string(buffer));
+    if (length >= 5) return;
 
     int i = max(0, r - 1);
     int fromj = max(0, c - 1);
@@ -38,38 +39,74 @@ bool each(const string &s, size_t index, int r, int c) {
     int toj = min(4, c + 1);
     for (; i <= toi; i++) {
         for (int j = fromj; j <= toj; j++) {
-            if (!(r == i && c == j) && s[index] == in[i][j]) {
-                if (each(s, index + 1, i, j)) return true;
+            if (!(r == i && c == j)) {
+                buffer[length] = in[i][j];
+                buffer[length + 1] = '\0';
+                put(buffer, node, i, j, length + 1);
             }
         }
     }
 
-    return false;
 }
 
+void makeup() {
+    char buffer[6];
 
-bool check(const string &s) {
-    int i, j;
-    for (i = 0; i < 5; i++) {
-        for (j = 0; j < 5; j++) {
-            if (s[0] == in[i][j]) {
-                if (each(s, 1, i, j)) {
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            buffer[0] = in[i][j];
+            buffer[1] = '\0';
+            put(buffer, mem[i][j], i, j, 1);
+        }
+    }
+}
+
+bool exist(const string &ss) {
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            if (ss[0] == in[i][j]) {
+                set<string> &_set = mem[i][j];
+                if (find(_set.begin(), _set.end(), ss) != _set.end()) {
                     return true;
                 }
             }
         }
     }
-
     return false;
 }
 
+void search(int index) {
+    int s = (int)strlen(str[index]);
+    int i = max(0, s - 5);
+
+    while (i >= 0) {
+        str[index][s]= '\0';
+        string ss(str[index] + i);
+
+        if (!exist(ss)) {
+            cout << " NO" << endl;
+            return;
+        }
+        s--;
+        i--;
+    }
+    cout << " YES" << endl;
+}
+
 void solve() {
+    makeup();
     for (int i = 0; i < n; i++) {
         cout << str[i];
-        if (check(str[i])) {
-            cout << " YES" << endl;
+        search(i);
+    }
+}
+
+void clear() {
+    int i, j;
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 5; j++) {
+            mem[i][j].clear();
         }
-        else cout << " NO" << endl;
     }
 }
 
