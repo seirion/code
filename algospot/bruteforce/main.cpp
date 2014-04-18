@@ -2,44 +2,50 @@
 #include <iostream>
 
 using namespace std;
+typedef long long int64;
 
-int from, to, range;
 
-long long buffer [32];
+int from, to, ratio;
+int64 buffer [33];
 
 
 void getInput() {
-    cin >> from >> to >> range;
+    cin >> from >> to >> ratio;
 }
 
-
-long long get(int n) {
+int64 powers(int n) {
+    int64 sum = 1;
+    while (n) {
+        int x = __builtin_ctz(n);
+        sum = sum * buffer[x+1] % 1000000007LL;
+        n &= n - 1;
+    }
+    return sum;
 }
-
 
 void solve() {
-    long long r = (long long)range;
-    buffer[0] = 0;
-    buffer[1] = r;
+    if (ratio == 1) {
+        cout << (to - from + 1) % 1000000007LL << endl;
+        return;
+    }
+
+    buffer[1] = (int64)ratio;
 
     int i;
-    for (i = 2; i < 32; i++) {
+    int limit = sizeof(int) * 8 - __builtin_clz(to) + 1;
+    for (i = 2; i <= limit ; i++) {
         buffer[i] = (buffer [i-1] * buffer [i-1]) % 1000000007LL;
     }
     
-    long long sss = 0;
-    for (i = from; i <= to; i++) {
-        int p = i;
-        long long sum = 1;
-        while (p) {
-            int x = __builtin_ctz(p);
-            sum = sum * buffer[x+1] % 1000000007LL;
-            p &= p - 1;
-        }
-        sss = (sss + sum) % 1000000007LL;
+    int64 a = powers(from);
+    int64 b = powers(to - from + 1) - 1LL;
+    int64 c = ratio - 1LL;
+
+    int64 re = a * b;
+    while (re % c) {
+        re += 1000000007LL;
     }
-    if (sss < 0) sss += 1000000007LL;
-        cout << sss << endl;
+    cout << (re / c) % 1000000007LL << endl;
 }
 
 int main() {
