@@ -1,4 +1,4 @@
-#include <code/debug.h>
+#include <trace/trace.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdafx.h>

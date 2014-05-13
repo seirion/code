@@ -254,16 +254,20 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="code"
+			Name="trace"
 			>
 			<File
-				RelativePath="..\code\debug.cpp"
+				RelativePath="..\trace\trace.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\code\debug.h"
+				RelativePath="..\trace\trace.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="code"
+			>
 			<File
 				RelativePath="..\code\main.cpp"
 				>

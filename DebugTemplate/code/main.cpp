@@ -1,7 +1,7 @@
 // 
 
 #if defined _EXTERNAL_DEBUGGER && defined _DEBUG
-    #include <code/debug.h>
+    #include <trace/trace.h>
 #else
     #define trace printf
 #endif
