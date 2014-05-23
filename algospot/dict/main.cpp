@@ -4,6 +4,7 @@
 
 using namespace std;
 
+typedef long long int64;
 
 int position;
 char result[201];
@@ -30,7 +31,7 @@ void print_string(int a, int b, int n) {
         return;
     }
 
-    int i, before(1), current(1);
+    int64 i, before(1), current(1);
     for (i = 1; i < a; i++) {
         current = current * (b+i) / i;
         if (n <= current) break;
