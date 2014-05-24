@@ -1,5 +1,8 @@
 // http://algospot.com/judge/problem/read/QUANTIZE
 #include <iostream>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
 #include <algorithm>
 
 using namespace std;
@@ -7,84 +10,55 @@ using namespace std;
 int n; // input num
 int s;
 int in[100];
-int vIndex[100]; // temp
-int vList[10]; // vList of s
+int sum[100];
+int sumsq[100]; // square
+int memo[100][11];
 
 void getInput() {
+    int i;
     cin >> n >> s;
-    for (int i = 0; i < n; i++) {
+    for (i = 0; i < n; i++) {
         cin >> in[i];
     }
     sort(in, in + n);
+
+    sum[0] = in[0];
+    sumsq[0] = in[0] * in[0];
+
+    for (i = 1; i < n; i++) {
+        sum[i] = sum[i-1] + in[i];
+        sumsq[i] = sumsq[i-1] + (in[i] * in[i]);
+    }
+
+    memset(memo, 0xFF, sizeof(int) * 100 * 11); // -1
 }
 
-int closest(int in) {
-    int minIndex = 0;
-    int minValue = abs(vList[minIndex] - in);
-    for (int i = 1; i < s; i++) {
-        if (abs(vList[i] - in) < minValue) {
-            minValue = abs(vList[i] - in);
-            minIndex = i;
-        }
-    }
-    return minIndex;
+int errorValue(int from, int to) { // [from, to]
+    int total = sum[to] - (from == 0 ? 0 : sum[from-1]);
+    int sq = sumsq[to] - (from == 0 ? 0 : sumsq[from-1]);
+    int avg = (int)((double)total / (to - from + 1) + .5);
+
+    return sq - (2 * avg * total) + (avg * avg *(to - from + 1));
 }
 
-void avg() {
-    int i, j;
-    for (i = 0; i < s; i++) {
-        int sum = 0, count = 0;
-        int mean = vList[i];
-        for (j = 0; j < n; j++) {
-            if (vIndex[j] == i) {
-                sum += in[j];
-                count++;
-            }
-        }
-        if (count == 0) {
-            vList[i] = 0;
-        }
-        else {
-            vList[i] = (int)((double)sum / count + 0.5);
-        }
+
+int quantize(int from, int part) {
+    if (from == n) return 0;
+    if (part == 0) return 0x00FFFFFF;
+
+    int &v = memo[from][part];
+    if (v != -1) return v;
+
+    v = 0x00FFFFFF;
+    for (int to = from; to < n; to++) {
+        v = min(v, errorValue(from, to) + quantize(to + 1, part-1));
     }
+
+    return v;
 }
 
 void solve() {
-    int i;
-    // 1. init
-    vList[0] = in[0];
-    for (i = 1; i < s; i++) {
-        vList[i] = in[(n-1)/(s-i)];
-    }
-    for (i = 0; i < n; i++) {
-        vIndex[i] = closest(in[i]);
-    }
-
-    // 2. loop
-    bool changed = true;
-    int error;
-    while (changed) {
-        avg();
-        changed = false;
-        for (i = 0; i < n; i++) {
-            //int org = closest(vIndex[i]);
-            int org = vIndex[i];
-            vIndex[i] = closest(in[i]);
-            if (org != vIndex[i]) {
-                changed = true;
-            }
-        }
-    }
-
-    // 3. error sum
-    int sum = 0;
-    for (i = 0; i < n; i++) {
-        int error = in[i] - vList[vIndex[i]];
-        sum += error * error;
-    }
-    cout << sum << endl;
-
+    cout << quantize(0, s) << endl;
 }
 
 int main() {
