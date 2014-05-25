@@ -3,56 +3,50 @@
 #include <deque>
 #include <list>
 
-#define BASE 2000
 using namespace std;
 
 
+class Pos { public:
+    Pos() {}
+    Pos(int x_, int y_) : x(x_), y(y_) {}
+    int x, y;
+    bool operator==(const Pos& p) {return(x == p.x && y == p.y);}
+};
+
 int j, n;
-int target;
-deque<int> used;
-list<int> remain;
+Pos target;
+deque<Pos> used;
+list<Pos> remain;
 
-int getX(int v) {
-    return ((v >> 16) & 0x0000FFFF);
-}
-int getY(int v) {
-    return ((v & 0x0000FFFF));
-}
-int getInt(int x, int y) {
-    return ((x << 16) & 0x7FFF0000) | (y & 0x0000FFFF);
-}
-bool connected(int from, int to) {
-    int fromx = getX(from);
-    int fromy = getY(from);
-    int tox = getX(to);
-    int toy = getY(to);
-
-    return (j*j) >= ((fromx-tox)*(fromx-tox)) + ((fromy-toy)*(fromy-toy));
+bool connected(const Pos &from, const Pos &to) {
+    return (j*j) >= ((from.x-to.x)*(from.x-to.x)) + ((from.y-to.y)*(from.y-to.y));
 }
 
 void getInput() {
+    used.clear();
+    remain.clear();
     int x, y;
     cin >> j;
     cin >> x >> y;
-    used.push_back(getInt(x + BASE, y + BASE));
+    used.push_back(Pos(x, y));
 
-    cin >> x >> y;
-    target = getInt(x + BASE, y + BASE);
+    cin >> target.x >> target.y;
+
     remain.push_back(target);
 
     cin >> n;
     for (int i = 0; i < n; i++) {
         cin >> x >> y;
-        remain.push_back(getInt(x + BASE, y + BASE));
+        remain.push_back(Pos(x, y));
     }
 }
 
 void solve() {
     while (!used.empty()) {
-        int u = used.front();
+        Pos u = used.front();
         used.pop_front();
 
-        list<int>::iterator it = remain.begin();
+        list<Pos>::iterator it = remain.begin();
         for (; it != remain.end();) {
             if (connected(u, *it)) {
                 used.push_back(*it);
@@ -64,7 +58,7 @@ void solve() {
         }
     }
 
-    list<int>::const_iterator it = remain.begin();
+    list<Pos>::const_iterator it = remain.begin();
     for (; it != remain.end(); it++) {
         if (target == *it) {
             cout << "NO" << endl;
