@@ -9,9 +9,8 @@ double in[201];
 
 void getInput() {
     cin >> N >> M;
-    double temp;
-    for (int i = 0; i < M; i++) {
-        cin >> in[i];
+    for (int j = 0; j < M; j++) {
+        cin >> in[j];
     }
 }
 
@@ -21,7 +20,9 @@ bool canbe(double upper) {
     int remain = N - 1;
     while (current < M) {
         if (in[current] - in[from] >= upper) {
-            if (--remain == 0) return true;
+            if (--remain == 0) {
+                return true;
+            }
             from = current;
         }
         current++;
@@ -30,17 +31,17 @@ bool canbe(double upper) {
 }
 
 void solve() {
-    double low(0.0), high(241.0);
-    for (int i = 0; i < 100; i++) {
-        double mid = (low + high) / 2;
-        if (canbe(mid)) {
-            low = mid;
+    int i, adj;
+    double d = 0.0;
+    double solution;
+    for (i = 0; i < 24000; i++) {
+        d = 0.01 * i;
+        if (canbe(d)) {
+            solution = d;
         }
-        else {
-            high = mid;
-        }
+        else break;
     }
-    printf("%.02f\n", low);
+    printf("%.02f\n", solution);
 }
 
 int main() {
