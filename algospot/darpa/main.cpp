@@ -1,63 +1,51 @@
 // http://algospot.com/judge/problem/read/DARPA
 #include <iostream>
 #include <cstdio>
-#include <list>
 
 using namespace std;
 
 int N, M;
-list<int> in;
+double in[201];
 
 void getInput() {
-    in.clear();
-    double temp;
-    int before, current;
     cin >> N >> M;
-    cin >> temp;
-    before = (int)(temp * 100);
-    M--;
-    in.push_back(30000);
+    double temp;
     for (int i = 0; i < M; i++) {
-        cin >> temp;
-        current = (int)(temp * 100);
-        in.push_back(current - before);
-        before = current;
+        cin >> in[i];
     }
 }
 
-void solve() {
-    while (in.size() > N) {
-        list<int>::iterator minIt, a, b;
-        a = in.begin();
-        b = in.begin();
-        minIt = in.begin();
-        b++;
-        int minValue = *a;
-        int minSum = (*a) + (*b);
-
-        for (; b != in.end(); a++, b++) {
-            if ((minValue > *b) || (minValue == *b && minSum > ((*a) + (*b)))) {
-                minIt = a;
-                minValue = *a;
-                minSum = (*a) + (*b);
-            }
+bool canbe(double upper) {
+    int from = 0;
+    int current = 1;
+    int remain = N - 1;
+    while (current < M) {
+        if (in[current] - in[from] >= upper) {
+            if (--remain == 0) return true;
+            from = current;
         }
-
-        minIt = in.erase(minIt);
-        *minIt = minSum;
+        current++;
     }
+    return false;
+}
 
-    int mm = 0xFFFFFFF;
-    list<int>::const_iterator it = in.begin();
-    for (; it != in.end(); it++) {
-        mm = min(mm, *it);
+void solve() {
+    double low(0.0), high(241.0);
+    for (int i = 0; i < 100; i++) {
+        double mid = (low + high) / 2;
+        if (canbe(mid)) {
+            low = mid;
+        }
+        else {
+            high = mid;
+        }
     }
-    printf("%d.%02d\n", mm / 100, mm % 100);
+    printf("%.02f\n", low);
 }
 
 int main() {
     int num;
     cin >> num;
-    for (int i = 0; i < num; i++) {getInput(); solve();}
+    for (int j = 0; j < num; j++) {getInput(); solve();}
     return 0;
 }
