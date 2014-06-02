@@ -11,21 +11,18 @@ char result[201];
 
 
 void print_string(int a, int b, int n) {
-    //cout << a << " " << b << " " << n << endl;
     if (a == 0 || b == 0) {
         if (n > 1) {
             cout << "NONE" << endl;
             return;
         }
         else {
-            memset(result + position, 'a', a);
             memset(result + position + a, 'b', b);
             cout << result << endl;
             return;
         }
     }
     if (n == 1) {
-        memset(result + position, 'a', a);
         memset(result + position + a, 'b', b);
         cout << result << endl;
         return;
@@ -38,10 +35,8 @@ void print_string(int a, int b, int n) {
         before = current;
     }
 
-    memset(result + position, 'a', a-i);
     position += a - i;
     result[position++] = 'b';
-    //cout << "i : " << i << endl << endl;
     print_string(i, b-1, n-before);
 }
 
@@ -50,6 +45,7 @@ void solve() {
     int a, b, n;
     cin >> a >> b >> n;
 
+    memset(result, 'a', 200);
     position = 0;
     result[a+b] = '\0';
 
