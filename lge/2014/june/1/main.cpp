@@ -16,8 +16,7 @@
 
 using namespace std;
 
-const int WORD = 0;
-const int POS = 1;
+enum { WORD = 0, POS, }; // for indexing
 
 class Input { public:
     Input(int w, int p) : word(w), pos(p) {}
@@ -68,7 +67,7 @@ void solve() {
     // find better
     while (tindex < n) {
         if (oknum == k) {
-            int word = in[sindex][WORD]; // word before (to be removed)
+            int word = in[sindex][WORD]; // previous word (to be removed)
             sindex++;
             from = in[sindex][POS];
             if (--count[word] < klist[word]) { 
