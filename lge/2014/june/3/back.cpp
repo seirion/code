@@ -35,7 +35,14 @@ class PointX { public:
     bool operator <(const PointX& p) const {
         return x == p.x ? y < p.y : x < p.x;
     }
-    bool operator >(const PointX& p) const { // trick
+    int x, y;
+};
+
+class PointY { public:
+    PointY() : x(0), y(0) {}
+    PointY(int x_, int y_) : x(x_), y(y_) {}
+    ~PointY() {}
+    bool operator <(const PointY& p) const {
         return y == p.y ? x < p.x : y < p.y;
     }
     int x, y;
@@ -57,20 +64,19 @@ uint32 get_next(uint32 v) {
     return w;
 }
 
-int simulation(multiset<PointX> &for_x, multiset<PointX, greater<PointX> > &for_y,
-        int left, int right, int top, int bottom) {
+int simulation(multiset<PointX> &for_x, multiset<PointY> &for_y, int left, int right, int top, int bottom) {
     int i;
     vector<PointX> back;
     multiset<PointX>::iterator xi;
-    multiset<PointX>::iterator yi;
+    multiset<PointY>::iterator yi;
     multiset<PointX>::reverse_iterator xri;
-    multiset<PointX>::reverse_iterator yri;
+    multiset<PointY>::reverse_iterator yri;
     for (i = 0; i < left; i++) {
         xi = for_x.begin();
         int x = xi->x;
         int y = xi->y;
         for_x.erase(xi);
-        for_y.erase(PointX(x, y));
+        for_y.erase(PointY(x, y));
         back.push_back(PointX(x,y));
     }
     for (i = 0; i < right; i++) {
@@ -78,7 +84,7 @@ int simulation(multiset<PointX> &for_x, multiset<PointX, greater<PointX> > &for_
         int x = xri->x;
         int y = xri->y;
         for_x.erase(--xri.base());
-        for_y.erase(PointX(x, y));
+        for_y.erase(PointY(x, y));
         back.push_back(PointX(x,y));
     }
     for (i = 0; i < top; i++) {
@@ -109,7 +115,7 @@ int simulation(multiset<PointX> &for_x, multiset<PointX, greater<PointX> > &for_
     // recover
     for (i = 0; i < back.size(); i++) {
         for_x.insert(back[i]);
-        for_y.insert(back[i]);
+        for_y.insert(PointY(back[i].x, back[i].y));
     }
 
     return result;
@@ -119,12 +125,12 @@ void solve() {
     scanf("%d", &n);
     int i;
     multiset<PointX> for_x;
-    multiset<PointX, greater<PointX> > for_y;
+    multiset<PointY> for_y;
 
     for (i = 0; i < n; i++) {
         scanf("%d %d", &in[i][X], &in[i][Y]);
         for_x.insert(PointX(in[i][X], in[i][Y]));
-        for_y.insert(PointX(in[i][X], in[i][Y]));
+        for_y.insert(PointY(in[i][X], in[i][Y]));
     }
 
     // for all cases
