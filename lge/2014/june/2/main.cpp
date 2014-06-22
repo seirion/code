@@ -17,7 +17,7 @@
 #include <set>
 
 using namespace std;
-typedef unsigned long long uint64;
+typedef long long int64;
 
 enum { MANY = 0, ONE, ND, }; // many solution, only one solution, not determined
 
@@ -34,19 +34,19 @@ class Line { public: // edge
 };
 
 int n, m, k;
-uint64 solution;
 int snum; // number of solutions
-bool checked[100 * 1000 + 1];
 vector<Line> in[100 * 1000 + 1];// 1-based
+vector<Line> back[100 * 1000 + 1];// (backup for checking another MST)
+vector<Line> path;  // backup optimal path
 
 
 // prim's algorithm
-void prim() {
+int64 prim(int64 solution) {
+    bool checked[100 * 1000 + 1] = {false,};
     checked[1] = true;
     int oknum = 1;
     set<Line> remain;
     remain.insert(in[1].begin(), in[1].end());
-    in[1].clear();
 
     while (oknum < n) { // for all vertics
         while (true) {
@@ -54,11 +54,11 @@ void prim() {
             if (!checked[line.from] || !checked[line.to]) { // if choose
                 int node = checked[line.from] ? line.to : line.from;
                 remain.insert(in[node].begin(), in[node].end());
-                in[node].clear();
                 solution += line.cost;
                 remain.erase(line);
                 checked[node] = true;
                 oknum++;
+                path.push_back(line); // save edges
                 break;
             }
             else { // not choose
@@ -66,35 +66,84 @@ void prim() {
             }
         }
     }
+    return solution;
 }
 
+void recover() {
+    for (int i = 1; i <= n; i++) {
+        in[i] = back[i];
+    }
+}
+void clear() {
+    for (int i = 1; i <= n; i++) {
+        back[i].clear();
+    }
+}
+
+bool remove(const Line &line) {
+    int from = line.from;
+    int to = line.to;
+    if (in[from].size() == 1 || in[to].size() == 1) return false; // need not try
+    int i, s;
+    s = in[from].size();
+    for (i = 0; i < s; i++) {
+        if (in[from][i].from == from && in[from][i].to == to) {
+            in[from].erase(in[from].begin() + i);
+            break;
+        }
+    }
+    s = in[to].size();
+    for (i = 0; i < s; i++) {
+        if (in[to][i].from == from && in[to][i].to == to) {
+            in[to].erase(in[to].begin() + i);
+            break;
+        }
+    }
+    return true;
+}
 
 void solve() {
     int i;
     // init
-    solution = 0;
-    snum = ND;
-    memset(checked, 0, sizeof(bool) * (100 * 1000 + 1));
+    snum = ONE;
+    path.clear();
+    int64 base = 0;
 
     //input
     scanf("%d %d %d", &n, &m, &k);
     int from, to, cost;
     for (i = 0; i < m; i++) {
         scanf("%d %d %d", &from, &to, &cost);
-        solution += cost;
-        in[from].push_back(Line(from, to, -cost));
-        in[to].push_back(Line(from, to, -cost));
+        base += cost;
+        back[from].push_back(Line(from, to, -cost));
+        back[to].push_back(Line(from, to, -cost));
 
     }
     for (i = 0; i < k; i++) {
         scanf("%d %d %d", &from, &to, &cost);
-        in[from].push_back(Line(from, to, cost));
-        in[to].push_back(Line(from, to, cost));
+        back[from].push_back(Line(from, to, cost));
+        back[to].push_back(Line(from, to, cost));
     }
 
     // solve
-    prim();
-    trace("%d %d\n", solution, snum);
+    recover();
+    int64 solution = prim(base);
+
+    // checking
+    int size = path.size();
+    for (i = 0; i < size; i++) {
+        recover(); // restore original input
+        if (!remove(path[i])) { // need not try
+            continue;
+        }
+        //if (solution == prim(base - (path[i].cost > 0 ? path[i].cost : 0))) {
+        if (solution == prim(base)) {
+            snum = MANY;
+            break;
+        }
+    }
+    clear();
+    trace("%lld %d\n", solution, snum);
 }
 
 int main(int, char*[]) {
