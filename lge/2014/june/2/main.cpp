@@ -14,21 +14,18 @@
 #include <cstdio>
 #include <cstring>
 #include <vector>
-#include <set>
+#include <queue>
+#include <functional>
 
 using namespace std;
 typedef long long int64;
 
-enum { MANY = 0, ONE, ND, }; // many solution, only one solution, not determined
+enum { MANY = 0, ONE, }; // many solution, only one solution, not determined
 
 class Line { public: // edge
     Line(int f, int t, int c): from(f), to(t), cost(c) {}
-    bool operator <(const Line& l) const { 
-        if (cost == l.cost) {
-            if (from == l.from) return to < l.to;
-            return from < l.from;
-        }
-        else return cost < l.cost;
+    bool operator >(const Line& l) const { 
+        return cost > l.cost;
     }
     int from, to, cost;
 };
@@ -40,30 +37,31 @@ vector<Line> back[100 * 1000 + 1];// (backup for checking another MST)
 vector<Line> path;  // backup optimal path
 
 
+void push(priority_queue<Line, vector<Line>, greater<Line> > &q, vector<Line> &v) {
+    int size = v.size();
+    for (int i = 0; i < size; i++) q.push(v[i]);
+}
+
 // prim's algorithm
 int64 prim(int64 solution) {
     bool checked[100 * 1000 + 1] = {false,};
     checked[1] = true;
     int oknum = 1;
-    set<Line> remain;
-    remain.insert(in[1].begin(), in[1].end());
+    priority_queue<Line, vector<Line>, greater<Line> > remain;
+    push (remain, in[1]);
 
     while (oknum < n) { // for all vertics
-        while (true) {
-            Line line = *remain.begin(); // min cost
-            if (!checked[line.from] || !checked[line.to]) { // if choose
-                int node = checked[line.from] ? line.to : line.from;
-                remain.insert(in[node].begin(), in[node].end());
-                solution += line.cost;
-                remain.erase(line);
-                checked[node] = true;
-                oknum++;
-                path.push_back(line); // save edges
-                break;
-            }
-            else { // not choose
-                remain.erase(remain.begin());
-            }
+        Line line = remain.top(); // min cost
+        if (!checked[line.from] || !checked[line.to]) { // if choose
+            int node = checked[line.from] ? line.to : line.from;
+            push (remain, in[node]);
+            solution += line.cost;
+            checked[node] = true;
+            oknum++;
+            path.push_back(line); // save edges
+        }
+        else { // not choose
+            remain.pop();
         }
     }
     return solution;
@@ -136,7 +134,6 @@ void solve() {
         if (!remove(path[i])) { // need not try
             continue;
         }
-        //if (solution == prim(base - (path[i].cost > 0 ? path[i].cost : 0))) {
         if (solution == prim(base)) {
             snum = MANY;
             break;
