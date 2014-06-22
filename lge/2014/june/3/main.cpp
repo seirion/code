@@ -28,14 +28,14 @@ using namespace std;
 enum { X = 0, Y, }; // for indexing
 typedef unsigned int uint32;
 
-class PointX { public:
-    PointX() : x(0), y(0) {}
-    PointX(int x_, int y_) : x(x_), y(y_) {}
-    ~PointX() {}
-    bool operator <(const PointX& p) const {
+class Point { public:
+    Point() : x(0), y(0) {}
+    Point(int x_, int y_) : x(x_), y(y_) {}
+    ~Point() {}
+    bool operator <(const Point& p) const {
         return x == p.x ? y < p.y : x < p.x;
     }
-    bool operator >(const PointX& p) const { // trick
+    bool operator >(const Point& p) const { // trick
         return y == p.y ? x < p.x : y < p.y;
     }
     int x, y;
@@ -57,45 +57,45 @@ uint32 get_next(uint32 v) {
     return w;
 }
 
-int simulation(multiset<PointX> &for_x, multiset<PointX, greater<PointX> > &for_y,
+int simulation(multiset<Point> &for_x, multiset<Point, greater<Point> > &for_y,
         int left, int right, int top, int bottom) {
     int i;
-    vector<PointX> back;
-    multiset<PointX>::iterator xi;
-    multiset<PointX>::iterator yi;
-    multiset<PointX>::reverse_iterator xri;
-    multiset<PointX>::reverse_iterator yri;
+    vector<Point> back;
+    multiset<Point>::iterator xi;
+    multiset<Point>::iterator yi;
+    multiset<Point>::reverse_iterator xri;
+    multiset<Point>::reverse_iterator yri;
     for (i = 0; i < left; i++) {
         xi = for_x.begin();
         int x = xi->x;
         int y = xi->y;
         for_x.erase(xi);
-        for_y.erase(PointX(x, y));
-        back.push_back(PointX(x,y));
+        for_y.erase(Point(x, y));
+        back.push_back(Point(x,y));
     }
     for (i = 0; i < right; i++) {
         xri = for_x.rbegin();
         int x = xri->x;
         int y = xri->y;
         for_x.erase(--xri.base());
-        for_y.erase(PointX(x, y));
-        back.push_back(PointX(x,y));
+        for_y.erase(Point(x, y));
+        back.push_back(Point(x,y));
     }
     for (i = 0; i < top; i++) {
         yri = for_y.rbegin();
         int x = yri->x;
         int y = yri->y;
         for_y.erase(--yri.base());
-        for_x.erase(PointX(x, y));
-        back.push_back(PointX(x,y));
+        for_x.erase(Point(x, y));
+        back.push_back(Point(x,y));
     }
     for (i = 0; i < bottom; i++) {
         yi = for_y.begin();
         int x = yi->x;
         int y = yi->y;
         for_y.erase(yi);
-        for_x.erase(PointX(x, y));
-        back.push_back(PointX(x,y));
+        for_x.erase(Point(x, y));
+        back.push_back(Point(x,y));
     }
     // calculate
     xi = for_x.begin();
@@ -103,7 +103,6 @@ int simulation(multiset<PointX> &for_x, multiset<PointX, greater<PointX> > &for_
     yi = for_y.begin();
     yri = for_y.rbegin();
 
-    int xxx = xri->x;
     int result = max(xri->x - xi->x, yri->y - yi->y);
 
     // recover
@@ -118,13 +117,13 @@ int simulation(multiset<PointX> &for_x, multiset<PointX, greater<PointX> > &for_
 void solve() {
     scanf("%d", &n);
     int i;
-    multiset<PointX> for_x;
-    multiset<PointX, greater<PointX> > for_y;
+    multiset<Point> for_x;
+    multiset<Point, greater<Point> > for_y;
 
     for (i = 0; i < n; i++) {
         scanf("%d %d", &in[i][X], &in[i][Y]);
-        for_x.insert(PointX(in[i][X], in[i][Y]));
-        for_y.insert(PointX(in[i][X], in[i][Y]));
+        for_x.insert(Point(in[i][X], in[i][Y]));
+        for_y.insert(Point(in[i][X], in[i][Y]));
     }
 
     // for all cases
@@ -138,7 +137,6 @@ void solve() {
         int top = popcount(flag & 0x38);        // 0000 0011 1000
         int bottom = popcount(flag & 0x7);      // 0000 0000 0111
 
-        //trace("%d %d %d %d      %d\n", left, right, top, bottom, left + right + top + bottom);
         solution = min(solution, simulation(for_x, for_y, left, right, top, bottom));
         flag = get_next(flag);
     }
