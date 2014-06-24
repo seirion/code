@@ -122,26 +122,24 @@ void solve() {
     // for all cases
     int solution = 0x7FFFFFFF;
     int direct[4]; // left, right, top, bottom
-    for (int a = 1; a <= 8; a <<= 1) {
-        for (int b = 1; b <= 8; b <<= 1) {
-            for (int c = 1; c <= 8; c <<= 1) {
-                memset(direct, 0, sizeof(int) * 4);
-#ifdef WIN32
-                unsigned long res;
-                _BitScanForward(&res, a); direct[res]++;
-                _BitScanForward(&res, b); direct[res]++;
-                _BitScanForward(&res, c); direct[res]++;
-#else // __linux__
-                direct[__builtin_ctz(a)]++;
-                direct[__builtin_ctz(b)]++;
-                direct[__builtin_ctz(c)]++;
-#endif
-                //static int k = 1;
-                //trace("%d) %d %d %d %d (%d)\n", k++, direct[0], direct[1], direct[2], direct[3], direct[0] + direct[1] + direct[2] + direct[3]);
-                solution = min(solution, simulation(direct[0], direct[1], direct[2], direct[3]));
-            }
+    for (i = 0; i < 4; i++) {
+        memset(direct, 0, sizeof(int) * 4);
+        direct[i] = 3;
+        solution = min(solution, simulation(direct[0], direct[1], direct[2], direct[3]));
+        direct[0] = direct[1] = direct[2] = direct[3] = 1;
+        direct[i] = 0;
+        solution = min(solution, simulation(direct[0], direct[1], direct[2], direct[3]));
+    }
+    for (i = 0; i < 4; i++) {
+        memset(direct, 0, sizeof(int) * 4);
+        direct[i] = 2;
+        for (int j = 0; j < 3; j++) {
+            direct[(i+j+1)%4] = 1;
+            solution = min(solution, simulation(direct[0], direct[1], direct[2], direct[3]));
+            direct[(i+j+1)%4] = 0;
         }
     }
+
     trace("%d\n", solution);
 }
 
