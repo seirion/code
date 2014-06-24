@@ -24,8 +24,9 @@ enum { MANY = 0, ONE, }; // many solution, only one solution, not determined
 
 class Line { public: // edge
     Line(int f, int t, int c): from(f), to(t), cost(c) {}
-    bool operator >(const Line& l) const { 
-        return cost > l.cost;
+    bool operator >(const Line& l) const { return cost > l.cost; }
+    bool operator ==(const Line& l) const { 
+        return (from == l.from && to == l.to && cost == l.cost);
     }
     int from, to, cost;
 };
@@ -81,18 +82,19 @@ void clear() {
 bool remove(const Line &line) {
     int from = line.from;
     int to = line.to;
+    int cost = line.cost;
     if (in[from].size() == 1 || in[to].size() == 1) return false; // need not try
     int i, s;
     s = in[from].size();
-    for (i = 0; i < s; i++) {
-        if (in[from][i].from == from && in[from][i].to == to) {
+    for (i = s-1; i >= 0 ; i--) {
+        if (in[from][i] == line) {
             in[from].erase(in[from].begin() + i);
             break;
         }
     }
     s = in[to].size();
-    for (i = 0; i < s; i++) {
-        if (in[to][i].from == from && in[to][i].to == to) {
+    for (i = s-1; i >= 0 ; i--) {
+        if (in[to][i] == line) {
             in[to].erase(in[to].begin() + i);
             break;
         }
