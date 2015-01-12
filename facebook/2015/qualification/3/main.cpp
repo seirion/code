@@ -46,22 +46,22 @@ bool canbe(int r, int c, int step) {
     if (c < 0) return false;
     if (c >= col) return false;
     if (maze[r][c] <= WALL) return false;
-    if (visit[r][c][step]) return false;
+    if (visit[r][c][step%4]) return false;
 
     // laser
     int rr = 0;
     for (; rr < r; rr++) {
-        if (maze[rr][c] < WALL && maze[rr][c] + step % 4 == DOWN) return false;
+        if (maze[rr][c] < WALL && (maze[rr][c] + step) % 4 == DOWN) return false;
     }
     for (rr = r+1; rr < row; rr++) {
-        if (maze[rr][c] < WALL && maze[rr][c] + step % 4 == UP) return false;
+        if (maze[rr][c] < WALL && (maze[rr][c] + step) % 4 == UP) return false;
     }
     int cc = 0;
     for (; cc < c; cc++) {
-        if (maze[r][cc] < WALL && maze[r][cc] + step % 4 == RIGHT) return false;
+        if (maze[r][cc] < WALL && (maze[r][cc] + step) % 4 == RIGHT) return false;
     }
     for (cc = c+1; cc < col; cc++) {
-        if (maze[r][cc] < WALL && maze[r][cc] + step % 4 == LEFT) return false;
+        if (maze[r][cc] < WALL && (maze[r][cc] + step) % 4 == LEFT) return false;
     }
     return true;
 }
@@ -87,19 +87,19 @@ void find_maze() {
         if (count <= scene.c) continue;
         if (canbe(scene.r - 1, scene.c, scene.s + 1)) { // UP
             Q.push(Scene(scene.r - 1, scene.c, scene.s + 1));
-            visit[scene.r - 1][scene.c][scene.s + 1 % 4] = true;
+            visit[scene.r - 1][scene.c][(scene.s + 1) % 4] = true;
         }
         if (canbe(scene.r + 1, scene.c, scene.s + 1)) { // DOWN
             Q.push(Scene(scene.r + 1, scene.c, scene.s + 1));
-            visit[scene.r + 1][scene.c][scene.s + 1 % 4] = true;
+            visit[scene.r + 1][scene.c][(scene.s + 1) % 4] = true;
         }
         if (canbe(scene.r, scene.c - 1, scene.s + 1)) { // LEFT
             Q.push(Scene(scene.r, scene.c - 1, scene.s + 1));
-            visit[scene.r][scene.c - 1][scene.s + 1 % 4] = true;
+            visit[scene.r][scene.c - 1][(scene.s + 1) % 4] = true;
         }
         if (canbe(scene.r, scene.c + 1, scene.s + 1)) { // RIGHT
             Q.push(Scene(scene.r, scene.c + 1, scene.s + 1));
-            visit[scene.r][scene.c + 1][scene.s + 1 % 4] = true;
+            visit[scene.r][scene.c + 1][(scene.s + 1) % 4] = true;
         }
     }
 }
