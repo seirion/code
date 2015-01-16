@@ -12,7 +12,7 @@ int A, B, C, n; // input
 int in[20][3];
 
 bool balanced(int a, int b, int c) {
-    return ((A*b) == (a*B) && (A*c) == (a*C));
+    return (A == a) && (B == b) && (C == c);
 }
 
 bool test(int index, int a, int b, int c) {
