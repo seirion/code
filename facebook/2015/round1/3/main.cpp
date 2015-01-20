@@ -78,8 +78,8 @@ void make() {
 
     memset(memo_stress, 0, sizeof(int) * 2001 * 2001);
     set<Pair> stress;
-    stress.insert(Pair(0, 1));
-    memo_stress[0][1] = 1;
+    stress.insert(Pair(0, 0));
+    memo_stress[0][0] = 1;
     make_stress(stress);
 }
 
