@@ -1,5 +1,5 @@
 // http://algospot.com/judge/problem/read/
-#include <iostream>
+#include <cstdio>
 
 using namespace std;
 
