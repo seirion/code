@@ -10,21 +10,22 @@ using namespace std;
 int n;
 char in[100][101];
 bool table[27][27];
+bool check[27][27];
 bool visit[27];
 vector<int> solution;
 
-bool valid(char *a, char *b) {
+bool valid(char *a, char *b, bool target[][27]) {
     if (*a == 0) return true;
     if (*b == 0) return false;
 
     if (*a == *b) {
-        return valid(a + 1, b + 1);
+        return valid(a + 1, b + 1, target);
     }
 
-    if (table[*b-'a'][*a-'a']) {
+    if (target[*b-'a'][*a-'a']) {
         return false;
     }
-    table[*a-'a'][*b-'a'] = true;
+    target[*a-'a'][*b-'a'] = true;
     return true;
 }
 
@@ -42,6 +43,7 @@ void dfs(int index) { // depth-first-search
 
 int main() {
     memset(table, 0, sizeof(bool) * 27 * 27);
+    memset(check, 0, sizeof(bool) * 27 * 27);
     memset(visit, 0, sizeof(bool) * 27);
     solution.clear();
 
@@ -52,9 +54,15 @@ int main() {
         gets(in[i]);
     }
     for (i = 1; i < n; i++) {
-        if (!valid(in[i-1], in[i])) {
+        if (!valid(in[i-1], in[i], table)) {
             printf("Impossible\n");
             return 0;
+        }
+        for (j = 0; j < i; j++) {
+            if (!valid(in[j], in[i], check)) {
+                printf("Impossible\n");
+                return 0;
+            }
         }
     }
 
