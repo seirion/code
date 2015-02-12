@@ -22,7 +22,7 @@ void tour(int now, int time, int64 visit) {
     visit |= 1LL << now;
 
     if (now == n * m - 1) { // the last cell
-        if (__builtin_popcountll(visit) == n * m) { // complete !
+        if (time == n * m - 1) { // complete !
             total++;
             return;
         }
