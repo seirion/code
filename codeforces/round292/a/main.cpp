@@ -5,11 +5,6 @@
 
 using namespace std;
 
-class Node { public:
-    Node(int x_, int y_) : x(x_), y(y_) {}
-    int x, y;
-};
-
 bool possible(int x, int y, int step) {
     x = x > 0 ? x : -x;
     y = y > 0 ? y : -y;
