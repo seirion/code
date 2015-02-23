@@ -5,11 +5,6 @@
 
 using namespace std;
 
-int FACT[] = {
-    0, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880
-};
-
-
 void print(int result[]) {
     for (int i = 9; i >= 2; i--) {
         while (result[i] > 0) {
