@@ -3,36 +3,39 @@
 #include <cstdio>
 #include <iostream>
 #include <cstring>
-#include <queue>
+#include <deque>
+#include <algorithm>
  
 using namespace std;
  
 int n, m;
-queue<int> nn, mm;
+deque<int> nn, mm;
  
 void input() {
  
     int i, in, size;
     scanf("%d %d", &n, &m);
     scanf("%d", &size);
-    queue<int> temp;
+    deque<int> temp;
     for (i = 0; i < size; i++) {
         scanf("%d", &in);
-        temp.push(in);
+        temp.push_back(in);
     }
+    sort(temp.begin(), temp.end());
     for (i = 0; i < n; i++) {
-        if (temp.front() == i) temp.pop();
-        else nn.push(i);
+        if (!temp.empty() && temp.front() == i) temp.pop_front();
+        else nn.push_back(i);
     }
  
     scanf("%d", &size);
     for (i = 0; i < size; i++) {
         scanf("%d", &in);
-        temp.push(in);
+        temp.push_back(in);
     }
+    sort(temp.begin(), temp.end());
     for (i = 0; i < m; i++) {
-        if (temp.front() == i) temp.pop();
-        else mm.push(i);
+        if (!temp.empty() && temp.front() == i) temp.pop_front();
+        else mm.push_back(i);
     }
 }
  
@@ -45,7 +48,7 @@ int lcm(int a, int b) {
 }
 
 bool possible() {
-    int limit = lcm(n, m);
+    int limit = lcm(n, m) * 2;
     while (!nn.empty() && !mm.empty()) {
         if (nn.front() > limit || mm.front() > limit) {
             return false;
@@ -53,14 +56,14 @@ bool possible() {
         int i = nn.front();
         int j = mm.front();
         if (i == j) {
-            nn.push(i + n); mm.push(j + m);
-            nn.pop(); mm.pop();
+            nn.push_back(i + n); mm.push_back(j + m);
+            nn.pop_front(); mm.pop_front();
         }
         else if (i < j) {
-            nn.pop();
+            nn.pop_front();
         }
         else {
-            mm.pop();
+            mm.pop_front();
         }
     }
  
