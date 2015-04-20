@@ -42,15 +42,14 @@ int solve() {
 
         sort(angle.begin(), angle.end());
         int size = angle.size();
-        for (int i = 0; i < size; i++) {
-            angle.push_back(angle[i] + 360.0);
+        for (int j = 0; j < size; j++) {
+            angle.push_back(angle[j] + 360.0);
         }
 
-        int maxi = 0;
-        int k = 0;
-        for (int j = 0; j < angle.size(); j++) {
-            while (angle[k]+180.0 < angle[j])k++;
-            if (j >= size) maxi = max(maxi, j-k+1);
+        int maxi(0), k(0);
+        for (int j = size; j < angle.size(); j++) {
+            while (angle[k]+180.0 < angle[j]) k++;
+            maxi = max(maxi, j-k+1);
         }
         printf("%d\n", size-maxi);
     }
