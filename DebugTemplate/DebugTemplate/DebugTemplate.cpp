@@ -1,67 +1,51 @@
-
-// DebugTemplate.cpp : Defines the class behaviors for the application.
+// DebugTemplate.cpp : Defines the entry point for the console application.
 //
 
 #include "stdafx.h"
-#include "DebugTemplate.h"
-#include "DebugTemplateDlg.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-
-// CDebugTemplateApp
-
-BEGIN_MESSAGE_MAP(CDebugTemplateApp, CWinAppEx)
-	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
-END_MESSAGE_MAP()
-
-
-// CDebugTemplateApp construction
-
-CDebugTemplateApp::CDebugTemplateApp()
+#include <cstdio>
+int main();
+int _tmain(int argc, _TCHAR* argv[])
 {
-	// TODO: add construction code here,
-	// Place all significant initialization in InitInstance
+	main();
+    getchar();
+	return 0;
 }
 
+#include <algorithm>
+#include <intrin.h>
 
-// The one and only CDebugTemplateApp object
+//////////////////////////////////////////////////////////////////////////
+#include <iostream>
+#include <cstdlib> // abs
+#include <vector>
 
-CDebugTemplateApp theApp;
+using namespace std;
 
+int main() {
+    int n, m;
+    cin >> n >> m;
 
-// CDebugTemplateApp initialization
+    vector<pair<int, int> > note; // day, height
+    for (int i = 0; i < m; i++) {
+        int a, b;
+        cin >> a >> b;
+        note.push_back(make_pair(a, b));
+    }
 
-BOOL CDebugTemplateApp::InitInstance()
-{
-	CWinAppEx::InitInstance();
-
-	// Standard initialization
-	// If you are not using these features and wish to reduce the size
-	// of your final executable, you should remove from the following
-	// the specific initialization routines you do not need
-	// Change the registry key under which our settings are stored
-	// TODO: You should modify this string to be something appropriate
-	// such as the name of your company or organization
-	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
-
-	CDebugTemplateDlg dlg;
-	m_pMainWnd = &dlg;
-	INT_PTR nResponse = dlg.DoModal();
-	if (nResponse == IDOK)
-	{
-		// TODO: Place code here to handle when the dialog is
-		//  dismissed with OK
-	}
-	else if (nResponse == IDCANCEL)
-	{
-		// TODO: Place code here to handle when the dialog is
-		//  dismissed with Cancel
-	}
-
-	// Since the dialog has been closed, return FALSE so that we exit the
-	//  application, rather than start the application's message pump.
-	return FALSE;
+    int size = note.size();
+    int max_height = 0;
+    for (int i = 1; i < size; i++) {
+        if (note[i].first - note[i - 1].first < abs(note[i].second - note[i - 1].second)) {
+            cout << "IMPOSSIBLE" << endl;
+            return 0;
+        }
+        max_height = max(max_height, note[i].second);
+        max_height = max(max_height, note[i - 1].second);
+        max_height = max(max_height, max(note[i].second, note[i - 1].second) +
+            (note[i].first - note[i - 1].first + abs(note[i].second - note[i - 1].second)) / 2);
+    }
+    max_height = max(max_height, note.front().second + (note.front().first - 1));
+    max_height = max(max_height, note.back().second + (n - note.back().first));
+    cout << max_height << endl;
+    return 0;
 }
