@@ -13,8 +13,8 @@ void solve() {
 }
 
 int main() {
-    int num;
-    scanf("%d", &num);
-    for (int i = 0; i < num; i++) {input(); solve();}
+    int t;
+    scanf("%d", &t);
+    while (t--) {input(); solve();}
     return 0;
 }
