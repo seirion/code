@@ -6,58 +6,50 @@
 
 using namespace std;
 
-class Node {
-public:
-    Node(int p, int po) : price(p), point(po) {}
+class Book { public:
+    Book(int pr, int po) : price(pr), point(po) {}
     int price, point;
-    bool operator <(const Node &n) const {return point < n.point;}
-    bool operator >(const Node &n) const {return point > n.point;}
+    bool operator >(const Book &n) const {
+        return (point == n.point ? price > n.price : point > n.point);
+    }
 };
 
-int book = 0; // # books
-int numStore = 0; // # store
-int mini;
-vector<Node> store[100];
+vector<Book> store[100];
+int numStore = 0;
 
-void getInput() {
-    int i;
-    for (i = 0; i < numStore; i++) { store[i].clear(); }
+void input() {
+    int i, price, point, numBook;
+    for (i = 0; i < numStore; i++) { store[i].clear(); } // init
 
-    int price, point;
-    cin >> book >> numStore;
-    for (i = 0; i < book; i++) {
+    cin >> numBook >> numStore;
+    for (i = 0; i < numBook; i++) {
         for (int j = 0; j < numStore; j++) {
             cin >> price >> point;
-            store[j].push_back(Node(price, point));
+            store[j].push_back(Book(price, point));
         }
     }
 }
 
-int getMin(vector<Node> &node, int index, int remain, size_t size) {
-    if (index == size) return;
+int get_min(vector<Book> &book) {
 
-    int price(0), point(0), remain(0);
-    size_t s = node.size();
-    for (int i = 0; i < s; i++) {
-        price += node[i].price;
-        point += node[i].point;
+    for (int i = 1, s = book.size(); i < s; i++) {
+        if (book[i].price < book[i-1].point) {
+            book[i].point += book[i-1].point - book[i].price;
+            book[i].price = book[i-1].price;
+        }
+        else {
+            book[i].price += book[i-1].price - book[i-1].point;
+        }
     }
 
-    return 0;
+    return book[book.size() - 1].price;
 }
 
 void solve() {
-    mini = 0X7FFFFFFF;
+    int mini = 0X7FFFFFFF;
     for (int i = 0; i < numStore; i++) {
-        sort(store[i].begin(), store[i].end(), greater<Node>());
-        mini = min(mini, getMin(store[i], 0, 0, store[i].size()));
-#if 0
-    size_t s = store[i].size();
-    for (int j = 0; j < s; j++) {
-        cout << " * " << store[i][j].point << " " << store[i][j].price << endl;
-    }
-    cout << endl;
-#endif
+        sort(store[i].begin(), store[i].end(), greater<Book>());
+        mini = min(mini, get_min(store[i]));
     }
 
     cout << mini << endl;
@@ -66,6 +58,6 @@ void solve() {
 int main() {
     int num;
     cin >> num;
-    for (int i = 0; i < num; i++) {getInput(); solve();}
+    for (int i = 0; i < num; i++) {input(); solve();}
     return 0;
 }
