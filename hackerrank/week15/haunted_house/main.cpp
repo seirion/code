@@ -1,51 +1,42 @@
 // https://www.hackerrank.com/contests/w15/challenges/haunted-house
 // Weekly Challenges - Week 15 Haunted House
 #include <cstdio>
-#include <iostream>
-#include <vector>
-#include <queue>
 #include <algorithm>
 #include <functional>
 
 using namespace std;
 
-vector<pair<int, int> > vv;
+pair<int, int> pp[6000000]; // index, (in/out)
 
 int main() {
     int n, low, high;
 
     scanf("%d", &n);
-    vv.reserve(n);
     for (int i = 0; i < n; i++) {
         scanf("%d %d", &low, &high);
-        vv.push_back(make_pair(high+1, low+1));
+        pp[i*2] = make_pair(high+1, 1/*in*/);
+        pp[i*2+1] = make_pair(low, -1/*out*/);
     }
-    sort(vv.begin(), vv.end(), greater<pair<int, int>>());
-    vv.push_back(make_pair(0, 0));
+    n = n << 1;
+    sort(pp, pp + n, greater<pair<int, int> >());
 
-    int now(0x7FFFFFFF), size(vv.size());
-    priority_queue<int> Q;
 
-    for (int i = 0; i < size; i++) {
-        if (now <= Q.size()) {
-            printf("%d\n", now);
-            return 0;
+    int num = 0, now;
+    for (int i = 0; i < n; ) {
+        now = pp[i].first;
+        if (num > now) {
+            break;
         }
 
-        now = vv[i].first;
-        if (!Q.empty() && now < Q.size() && Q.size() >= Q.top()) {
-            printf("%d\n", Q.size());
-            return 0;
+        while (now == pp[i].first) {
+            num += pp[i++].second;
         }
-        while (!Q.empty()) {
-            if (now < Q.top()) {
-                Q.pop();
-            }
-            else break;
+
+        if (num >= now) {
+            num = now;
+            break;
         }
-        Q.push(vv[i].second);
     }
-
-    printf("%d\n", min(now, (int)Q.size()));
+    printf("%d\n", num);
     return 0;
 }
