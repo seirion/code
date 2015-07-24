@@ -1,32 +1,26 @@
 // codeforces round313
 // http://codeforces.com/contest/560/problem/D
-#include <cstdio>
-#include <cstring>
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
-char a[200002];
-char b[200002];
+string sort_of(string s) {
+    int size = s.size();
+    if (size & 1) return s;
 
-int size;
-
-bool com(int i, int j, int s) {
-    if (strncmp(a+i, b+j, s) == 0) return true;
-    if (s & 1) return false;
-    s >>= 1;
-
-    return (com(i, j, s) && com(i+s, j+s, s)) ||
-    (com(i, j+s, s) && com(i+s, j, s));
+    string a[2];
+    a[0] = sort_of(s.substr(0, size>>1));
+    a[1] = sort_of(s.substr(size>>1, size));
+    sort(a, a+2);
+    return a[0] + a[1];
 }
 
 int main() {
-    fgets(a, 200002, stdin);
-    fgets(b, 200002, stdin);
-
-    bool r = com(0, 0, strlen(a) - 1);
-    if (r) cout << "YES\n";
+    string a, b;
+    cin >> a >> b;
+    if (sort_of(a) == sort_of(b)) cout << "YES\n";
     else cout << "NO\n";
     return 0;
 }
