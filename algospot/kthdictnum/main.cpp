@@ -9,50 +9,56 @@ typedef unsigned long long uint64;
 
 uint64 from, to, k;
 
-int where_am_i(uint64 prefix) {
-    uint64 num;
-    uint64 acc(0), sum(0);
-    for (int head = 0; head <= 9; head++) { // [0, 9]
-        num = 1;
-        for (int len = 0; len < 19; len++) { // 2^63-1 == 4611686018427387904
-            uint64 begin = (prefix * 10 + head) * num;
-            uint64 end = begin + num; // [begin, end)
-            if (begin > to) break;
+uint64 num_of_children(uint64 prefix, int digit) { // depth first search
 
-            begin = max(begin, from);
-            end = min(end, to);
+    if (prefix == 0) return (from == 0 ? 1 : 0);
 
-            if (end > begin) sum += end - begin;
-            if (prefix == 0 && head == 0) break;
-            num *= 10;
+    uint64 all(0), num(1);
+
+    for (int len = digit; len <= 19; len++) { // 2^63-1 ==  9,223,372,036,854,775,807
+                                          // 2^64-1 == 18,446,744,073,709,551,615
+        uint64 begin = prefix * num;
+        uint64 end = begin + num; // [begin, end)
+        if (begin >= to) break;
+
+        begin = max(begin, from);
+        end = min(end, to);
+
+        if (end > begin) {
+            all += (end - begin);
         }
-        if (sum > k) {
-            k -= acc;
-            return head;
-        }
-        acc = sum;
+        num *= 10;
     }
-    printf("somethin's wrong >>>> \n");
-    return -1ll;
+    return all;
+}
+
+uint64 next(uint64 prefix, int digit) {
+    for (int head = 0; head <= 9; head++) {
+        uint64 all = num_of_children(prefix * 10 + head, digit);
+        if (all >= k) return head;
+        else k -= all;
+    }
+
+    printf("something wrong...\n");
+    return 0;
 }
 
 uint64 find(uint64 prefix) {
-    // 1. where am i ?
-    while (true) {
-        prefix = (prefix * 10) + where_am_i(prefix);
-        if (from <= prefix && prefix < to) {
-            if (k == 0) return prefix;
-            k--;
-        }
-    }
+    int digit = 1;
+    uint64 solution = 0;
+    do {
+        solution = solution * 10 + next(solution, digit++);
+        if (from <= solution && solution < to) k--;
+    } while (k > 0);
+    return solution;
 }
 
-
 void solve() {
-    scanf("%lld %lld %lld", &from, &to, &k);
-    to++;
+    cin >> from >> to >> k;
+    to++; // [from, to) 
+    k++;  // 1-based
 
-    printf("%lld\n", find(0)); // [from, to)
+    cout << find(0) << endl;
 }
 
 int main() {
