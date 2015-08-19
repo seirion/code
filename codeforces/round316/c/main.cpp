@@ -2,29 +2,25 @@
 // http://codeforces.com/contest/570/problem/C
 #include <iostream>
 #include <cstdio>
-#include <vector>
 
 using namespace std;
 
 int n, query;
 char in[300003];
-vector<int> index;
-vector<int> num;
 int total(0);
 
 void set_table() {
     bool dot(false);
-    int size = n+2;
+    int size(n+2), index, num;
 
     for (int i = 0; i < size; i++) {
         if (dot && in[i] != '.') {
             dot = false;
-            num.push_back(i-index.back());
-            total += num.back() - 1;
+            total += i - index - 1;
         }
         else if (!dot && in[i] == '.') {
             dot = true;
-            index.push_back(i);
+            index = i;
         }
     }
 }
