@@ -20,7 +20,7 @@ void input() {
 }
 
 int common_friends(int a, int b) { // a != b
-    std::vector<int> v(in[a].size() + in[b].size());
+    std::vector<int> v(max(in[a].size(), in[b].size()));
     auto it = set_intersection(in[a].begin(), in[a].end(), in[b].begin(), in[b].end(), v.begin());
     return it - v.begin();
 }
@@ -30,7 +30,7 @@ void solve() {
     for (int a = 1; a <= n; a++) {
         if (in[a].size() <= best) continue;
         for (int b = a+1; b <= n; b++) {
-            if (in[a].find(b) != in[a].end() && in[b].size() <= best) continue;
+            if (in[a].find(b) != in[a].end() || in[b].size() <= best) continue;
             best = max(best, common_friends(a, b));
         }
     }
