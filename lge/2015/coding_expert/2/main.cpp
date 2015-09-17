@@ -1,5 +1,5 @@
 // LGE codejam 2015
-// 2. ..
+// 2. 전구
 #include <iostream>
 #include <cstring>
 
@@ -12,8 +12,8 @@ void input() {
     memset(in, 0, sizeof(in));
     cin >> n >> m;
     for (int i = 0; i < m; i++) {
-        int r, c; cin >> r >> c;
-        in[c-1][r-1] = true;
+        int x, y; cin >> y >> x;
+        in[x-1][y-1] = true;
     }
 }
 
@@ -25,7 +25,7 @@ void solve() {
 
     enum { EVEN, ODD, };
     int total(0), state(EVEN);
-    int row;
+    int y;
     for (int i = 0; i < n; i++) {
         switch(state) {
             case EVEN:
@@ -34,7 +34,7 @@ void solve() {
                     total++;
                 }
                 else {
-                    row = in[i][0] ? 0 : 1;
+                    y = in[i][0] ? 0 : 1;
                     state = ODD;
                 }
                 break;
@@ -44,9 +44,10 @@ void solve() {
                 }
                 else if (in[i][0] && in[i][1]) {// both are on
                     total++;
+                    y ^= 1; // switch
                 }
                 else {
-                    total += 1 + (in[i][row] ? 0 : 1);
+                    total += 1 + (in[i][y] ? 0 : 1);
                     state = EVEN;
                 }
                 break;
