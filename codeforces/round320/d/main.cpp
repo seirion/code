@@ -31,7 +31,10 @@ long long power(int base, int times) {
     return r;
 }
 
-void once() {
+void shift() {
+    for (int i = 0; i < n; i++) cin >> in[i];
+    for (int i = 0; i < n; i++) put(in[i]);
+
     long long maxi = 0;
     for (int i = 0; i < n; i++) {
         long long now = in[i] * power(x, k);
@@ -44,20 +47,9 @@ void once() {
     cout << maxi << endl;
 }
 
-void shift_max() {
-    auto maxi = max_element(in, in+n);
-    put(*maxi, -1);
-    put(*maxi * power(x, k));
-    cout << make() << endl;
-}
 int main() {
     cin >> n >> k >> x;
 
-    for (int i = 0; i < n; i++) cin >> in[i];
-    for (int i = 0; i < n; i++) put(in[i]);
-
-    //if (k == 1) once();
-    //else shift_max();
-    once();
+    shift();
     return 0;
 }
