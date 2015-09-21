@@ -4,11 +4,9 @@
 
 using namespace std;
 typedef long long int64;
-const int X = 0;
-const int Y = 1;
 
 class Point { public:
-    Point (int x_ = 0, int y_ = 0) : x(x_), y(y_) {}
+    Point (int64 x_ = 0, int64 y_ = 0) : x(x_), y(y_) {}
     int64 x, y;
     bool operator==(const Point &p) const {
         return x == p.x && y == p.y;
@@ -35,8 +33,7 @@ int64 distance(const Point &a, const Point &b) {
 
 int64 mid_point(int64 a, int64 b) { // closer to low(a)
     int64 distance = abs((a - b) / 2);
-    int64 mid = (a < b ? a + distance : a - distance);
-    return mid;
+    return (a < b ? a + distance : a - distance);
 }
 
 Point mid_point(const Point &a, const Point &b) {
