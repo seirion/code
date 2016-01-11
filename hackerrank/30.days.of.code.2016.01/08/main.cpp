@@ -3,7 +3,6 @@
 // Day 8: Dictionaries and Maps!
 
 #include <iostream>
-#include <cstdio>
 #include <cstring>
 #include <string>
 #include <map>
@@ -11,22 +10,18 @@
 using namespace std;
 
 map<string, int> m;
-char buffer [512];
 
 int main() {
     int n; scanf("%d\n", &n);
+    string str;
     for (int i = 0; i < n; i++) {
-        fgets(buffer, sizeof(buffer), stdin);
-        buffer[strlen(buffer)-1] = '\0';
+        getline(cin, str);
         int num; scanf("%d\n", &num);
-        m[buffer] = num;
+        m[str] = num;
     }
 
-    for (int i = 0; i < n; i++) {
-        fgets(buffer, sizeof(buffer), stdin);
-        if (buffer[strlen(buffer)-1] == '\n')
-            buffer[strlen(buffer)-1] = '\0';
-        auto it = m.find(buffer);
+    while (getline(cin, str)) {
+        auto it = m.find(str);
         if (it == m.end()) {
             cout << "Not found\n";
         }
