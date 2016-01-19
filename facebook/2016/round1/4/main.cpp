@@ -71,7 +71,7 @@ int calc_best() {
         for (int a : v) {
             for (int b : v) {
                 if (a <= b) continue; // only b < a
-                if (__builtin_popcount(a|b) != (num << 1)) continue;
+                if (a & b) continue;
                 set_each(a, b);
             }
         }
