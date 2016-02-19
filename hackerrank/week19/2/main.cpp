@@ -26,40 +26,45 @@ void input() {
 }
 
 void solve() {
-    mm[Node(-1, -1)] = 0;
+    mm[Node(0, 0)] = 0;
 
     for (int i = 0; i < n; i++) {
         map<Node, int> temp;
         for (auto &x: mm) {
-            int a = x.first.a;
-            int b = x.first.b;
-            int dist = x.second;
+            const int &a = x.first.a;
+            const int &b = x.first.b;
+            const int &dist = x.second;
 
             const int &from = in[i][0];
             const int &to = in[i][1];
 
-            int dist1 = (a == -1 ? 0 : abs(from - a)) + abs(to - from) + dist;
-            int dist2 = (b == -1 ? 0 : abs(from - b)) + abs(to - from) + dist;
+            int dist1 = (a == 0 ? 0 : abs(from - a)) + abs(to - from) + dist;
+            int dist2 = (b == 0 ? 0 : abs(from - b)) + abs(to - from) + dist;
 
+            Node node;
             // move a
             {
-                Node node(min(to,b), max(to,b));
-                if (temp.find(node) == temp.end()) {
-                    temp[Node(node)] = dist1;
+                if (to < b) { node.a = to; node.b = b;}
+                else { node.a = b; node.b = to; }
+                auto it = temp.find(node);
+                if (it == temp.end()) {
+                    temp[node] = dist1;
                 }
                 else {
-                    temp[node] = min(temp[node], dist1);
+                    it->second = min(it->second, dist1);
                 }
             }
 
             // move b
             {
-                Node node(min(a, to), max(a, to));
-                if (temp.find(node) == temp.end()) {
+                if (to < a) { node.a = to; node.b = a;}
+                else { node.a = a; node.b = to; }
+                auto it = temp.find(node);
+                if (it == temp.end()) {
                     temp[node] = dist2;
                 }
                 else {
-                    temp[node] = min(temp[node], dist2);
+                    it->second = min(it->second, dist2);
                 }
             }
         }
