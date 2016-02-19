@@ -23,3 +23,14 @@ unsigned int next(unsigned int) {
     w = t | ((((t & -t) / (v & -v)) >> 1) - 1);
     return w;
 }
+
+// print binary
+void print_bit(unsigned int x) {
+    int i = 31;
+    while (0 <= i) {
+        cout << ((x & (1<<i)) ? 1 : 0);
+        if (i%4 == 0) cout << " ";
+        i--;
+    }
+    cout << endl;
+}
