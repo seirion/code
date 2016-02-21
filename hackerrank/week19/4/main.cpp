@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstdio>
 #include <vector>
+#include <set>
 #include <algorithm>
 
 using namespace std;
@@ -55,63 +56,50 @@ int right_count(int start, int value) {
 void solve() {
     long long res = 0;
 
+    set<int> s; s.insert(-1); s.insert(n); // keep the index
+
     for (int i = 0; i < n-1; i++) {
         int &value = v[i].first;
         int &index = v[i].second;
 
-        long long left_c = left_count(index, value);
-        long long right_c = right_count(index, value);
+        auto it = s.insert(index).first;
+        auto prev = it; prev--;
+        auto next = it; next++;
+
+        long long left_c = *it - *prev;
+        long long right_c = *next - *it;
 
         // left side
-        if (1 < right_c) {
-            long long v = value * left_c % MOD * numofnum[right_c-1] % MOD;
-            res = (res + v) % MOD;
-        }
+        long long vv = value * left_c % MOD * numofnum[right_c-1] % MOD;
+        res = (res + vv) % MOD;
 
-        int begin = -1;
-        for (int x = index+right_c; x < n; x++) { // -> right
-            if (value <= in[x]) {
-                if (begin == -1) begin = x;
+        while (true) { // -> right
+            int begin = *next; next++;
+            if (next == s.end()) break;
+
+            int end = *next;
+
+            int size = end - begin - 1;
+            if (0 < size) {
+                vv = value * left_c % MOD * right_c % MOD * numof(size) % MOD;
+                res = (res + vv) % MOD;
             }
-            else {
-                if (begin != -1) {
-                    int size = x - begin;
-                    long long v = value * left_c % MOD * right_c % MOD * numof(size) % MOD;
-                    res = (res + v) % MOD;
-                    begin = -1;
-                }
-            }
-        }
-        if (begin != -1) {
-            int size = n - begin;
-            long long v = value * left_c % MOD * right_c % MOD * numof(size) % MOD;
-            res = (res + v) % MOD;
-            begin = -1;
         }
 
 
-        // right side
-        if (1 < left_c) {
-            long long v = value * right_c % MOD * numofnum[left_c-1] % MOD;
-            res = (res + v) % MOD;
-        }
-        for (int x = index-left_c; 0 <= x; x--) { // <- left
-            if (value < in[x]) {
-                if (begin == -1) begin = x;
+        //right side
+        vv = value * right_c % MOD * numofnum[left_c-1] % MOD;
+        res = (res + vv) % MOD;
+
+        while (prev != s.begin()) { // <-
+            int begin = *prev; prev--;
+            int end = *prev;
+
+            int size = begin - end - 1;
+            if (0 < size) {
+                vv = value * left_c % MOD * right_c % MOD * numof(size) % MOD;
+                res = (res + vv) % MOD;
             }
-            else {
-                if (begin != -1) {
-                    int size = begin - x;
-                    long long v = value * left_c % MOD * right_c % MOD * numof(size) % MOD;
-                    res = (res + v) % MOD;
-                    begin = -1;
-                }
-            }
-        }
-        if (begin != -1) {
-            int size = begin+1;
-            long long v = value * left_c % MOD * right_c % MOD * numof(size) % MOD;
-            res = (res + v) % MOD;
         }
     }
 
