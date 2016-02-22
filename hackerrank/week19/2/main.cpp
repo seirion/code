@@ -43,7 +43,6 @@ void solve() {
 
             Node node;
             // move a
-            {
                 if (to < b) { node.a = to; node.b = b;}
                 else { node.a = b; node.b = to; }
                 auto it = temp.find(node);
@@ -51,22 +50,19 @@ void solve() {
                     temp[node] = dist1;
                 }
                 else {
-                    it->second = min(it->second, dist1);
+                    if (dist1 < it->second) it->second = dist1;
                 }
-            }
 
             // move b
-            {
                 if (to < a) { node.a = to; node.b = a;}
                 else { node.a = a; node.b = to; }
-                auto it = temp.find(node);
-                if (it == temp.end()) {
+                auto it2 = temp.find(node);
+                if (it2 == temp.end()) {
                     temp[node] = dist2;
                 }
                 else {
-                    it->second = min(it->second, dist2);
+                    if (dist2 < it2->second) it2->second = dist2;
                 }
-            }
         }
         mm.swap(temp);
     }
