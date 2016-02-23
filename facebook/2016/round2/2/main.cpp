@@ -11,37 +11,30 @@ using namespace std;
 
 int n, k;
 double p;
-double dp[3001][3001];
+
+double mylog[3002];
 
 void input() {
     cin >> n >> k >> p;
 }
 
-void calc_dp() { // n * n
-    memset(dp, 0, sizeof(dp));
-    dp[1][1] = p;
+void calc_log() {
+    for (int i = 1; i < 3000; i++) mylog[i] = log10(i);
+}
 
-    for (int r = 2; r <= n; r++) {
-        dp[r][1] = dp[r-1][1] * r / (r-1) * (1-p);
-        for (int c = 2; c <= r; c++) {
-            dp[r][c] = dp[r][c-1] * (r-c+1) / c * p / (1-p);
-        }
-    }
+// n! / r! / (n-r)! * p^n * q^(n-r)
+double calc(int all, int to) {
+    double result = 0.0;
+    for (int i = 1; i <= all; i++) result += mylog[i];
+    for (int i = 1; i <= to; i++) result -= mylog[i];
+    for (int i = 1; i <= (all-to); i++) result -= mylog[i];
+    result += (to * log10(p));
+    result += ((all-to) * log10(1.0-p));
 
-#if 0
-    printf("=========\n");
-    for (int r = 1; r <= n; r++) {
-        for (int c = 1; c <= r; c++) {
-            printf("%.8f   ", dp[r][c]);
-        }
-        printf("\n");
-    }
-    printf("=========\n\n");
-#endif
+    return pow(10, result);
 }
 
 void solve(int cases) {
-    calc_dp();
 
     double best = 0.0;
     int limit = n / k;
@@ -54,12 +47,10 @@ void solve(int cases) {
 
         for (int x : v) {
             for (int i = k; i <= x; i++) {
-                result += dp[x][i];
-                //printf(": %d, %d (%f)\n", x, i, dp[x][i]);
+                result += calc(x, i);
             }
         }
 
-        //printf(":::::::: %f\n", result);
         best = max(best, result);
     }
 
@@ -68,6 +59,8 @@ void solve(int cases) {
 }
 
 int main() {
+    calc_log();
+
     int t; cin >> t;
     for (int i = 1; i <= t; i++) {
         input();
