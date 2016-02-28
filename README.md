@@ -1,7 +1,7 @@
 code
 ====
 
-code jam source
+codejam source
 
 ## codejam sites
 https://code.google.com/codejam<br>
