@@ -12,6 +12,17 @@ typedef unsigned int uint32;
 int n, k;
 int ans[11];
 
+bool devidable(long long now, int x, int base) {
+    int num = 0;
+    while (now) {
+        num = base * num;
+        if (now & 1) num++;
+        now >>= 1;
+        num %= x;
+    }
+    return (num == 0);
+}
+
 void solve() {
     cin >> n >> k;
     const uint32 LIMIT = (1 << (n-2));
@@ -22,15 +33,8 @@ void solve() {
         bool ok = false;
         for (int x = 2; x < 10000; x++) {
             for (int base = 2; base <= 10; base++) {
-                long long now = mask;
-                int num = 0;
-                while (now) {
-                    num = base * num;
-                    if (now & 1) num++;
-                    now >>= 1;
-                    num %= x;
-                }
-                if (num == 0 && ans[base] == -1) {
+                if (ans[base] != -1) continue;
+                if (devidable(mask, x, base)) {
                     ans[base] = x;
                     break;
                 }
