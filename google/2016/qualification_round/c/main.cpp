@@ -11,19 +11,6 @@ typedef unsigned int uint32;
 
 int n, k;
 int ans[11];
-vector<int> prime;
-
-bool is_prime(int p) {
-    for (int i = 0; i < prime.size(); i++) if (p % prime[i] == 0) return false;
-    return true;
-}
-
-void calc() {
-    prime.push_back(2);
-    for (int i = 3; i <= 10000; i+=2) {
-        if (is_prime(i)) prime.push_back(i);
-    }
-}
 
 void solve() {
     cin >> n >> k;
@@ -33,7 +20,7 @@ void solve() {
         long long mask = (1LL << (n-1)) | (i << 1) | 1;
         memset(ans, 0xFF, sizeof(ans));
         bool ok = false;
-        for (int x : prime) {
+        for (int x = 2; x < 10000; x++) {
             for (int base = 2; base <= 10; base++) {
                 long long now = mask;
                 int num = 0;
@@ -70,8 +57,6 @@ void solve() {
 }
 
 int main() {
-    calc();
-
     int t;
     cin >> t;
     for (int i = 1; i <= t; i++) {
