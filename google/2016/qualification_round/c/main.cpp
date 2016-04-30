@@ -31,7 +31,7 @@ void solve() {
         long long mask = (1LL << (n-1)) | (i << 1) | 1;
         memset(ans, 0xFF, sizeof(ans));
         bool ok = false;
-        for (int x = 2; x < 10000; x++) {
+        for (int x = 2; x < 1000; x++) {
             for (int base = 2; base <= 10; base++) {
                 if (ans[base] != -1) continue;
                 if (devidable(mask, x, base)) {
