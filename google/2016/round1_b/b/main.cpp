@@ -11,17 +11,6 @@ string a, b;
 string best, best1, best2; // small diff
 int size;
 
-string same() {
-    string out;
-    for (int i = 0; i < size; i++) {
-        if (a[i] != '?' && b[i] != '?' && a[i] != b[i]) return "";
-        if (a[i] == '?' && b[i] == '?') out.push_back('0');
-        else if (a[i] == '?') out.push_back(b[i]);
-        else out.push_back(a[i]);
-    }
-    return out;
-}
-
 string diffv(const string &s1, const string &s2) { // s1 < s2
     string out;
     for (int i = 0; i < s1.size(); i++) {
@@ -36,39 +25,18 @@ string diffv(const string &s1, const string &s2) { // s1 < s2
     return out;
 }
 
-bool promising(const string& out1, const string& out2) {
-    if (out1 == out2) return true;
-    string temp;
-    if (out1 < out2) temp = diffv(out1, out2);
-    else temp = diffv(out2, out1);
-    
-    for (int i = 0; i < temp.size(); i++) {
-        if (temp[i]-1 < best[i]) return true;
-        else if (best[i] < temp[i]-1) return false;
-    }
-    return true;
-}
-
 void find(int i, int diff, string out1, string out2) {
     if (i == size) {
         string temp;
         if (out1 <= out2) temp = diffv(out1, out2);
         else temp = diffv(out2, out1);
-        if (temp < best) {
+        if (temp < best || (temp == best && (out1 < best1 || out2 < best2))) {
             best = temp;
             best1 = out1;
             best2 = out2;
         }
-        else if (temp == best) {
-            if (out1 < best1 || out2 < best2) {
-                best = temp;
-                best1 = out1;
-                best2 = out2;
-            }
-        }
         return;
     }
-    if (!promising(out1, out2))  return;
 
     if (diff == 0) {
         if (a[i] == '?' && b[i] == '?') {
@@ -169,12 +137,6 @@ void solve() {
 
     cin >> a >> b;
     size = a.size();
-
-    best = same();
-    if (!best.empty()) {
-        cout << best << " " << best << endl;;
-        return;
-    }
 
     string temp(size, '9');
     best.swap(temp);
