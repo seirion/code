@@ -52,39 +52,33 @@ void find(int i, int diff, string out1, string out2) {
             find(i+1, -1, out1, out2);
         }
         else if (a[i] == '?') {
-            // a == b
             out1.push_back(b[i]);
             out2.push_back(b[i]);
-            find(i+1, diff, out1, out2);
+            find(i+1, diff, out1, out2); // a == b
 
-            // a < b
             if (b[i] != '0') {
-                out1[i] = b[i] - 1; // out2[i] = b[i];
-                find(i+1, -1, out1, out2);
+                out1[i] = b[i] - 1;
+                find(i+1, -1, out1, out2); // a < b
             }
 
-            // b < a
             if (b[i] != '9') {
-                out1[i] = b[i] + 1; // out2[i] = b[i];
-                find(i+1, 1, out1, out2);
+                out1[i] = b[i] + 1;
+                find(i+1, 1, out1, out2); // b < a
             }
         }
         else if (b[i] == '?') {
-            // a == b
             out1.push_back(a[i]);
             out2.push_back(a[i]);
-            find(i+1, diff, out1, out2);
+            find(i+1, diff, out1, out2); // a == b
 
-            // a < b
             if (a[i] != '9') {
                 out2[i] = a[i] + 1;
-                find(i+1, -1, out1, out2);
+                find(i+1, -1, out1, out2); // a < b
             }
 
-            // b < a
             if (a[i] != '0') {
                 out2[i] = a[i] - 1;
-                find(i+1, 1, out1, out2);
+                find(i+1, 1, out1, out2); // b < a
             }
         }
         else {
@@ -92,49 +86,37 @@ void find(int i, int diff, string out1, string out2) {
             out2.push_back(b[i]);
             find(i+1, a[i] - b[i], out1, out2);
         }
+        return;
     }
-    else if (diff < 0) { // a < b
-        if (a[i] == '?' && b[i] == '?') {
+
+    if (a[i] == '?' && b[i] == '?') {
+        if (diff < 0) { // a < b
             out1.push_back('9');
             out2.push_back('0');
         }
-        else if (a[i] == '?') {
-            out1.push_back('9');
-            out2.push_back(b[i]);
-        }
-        else if (b[i] == '?') {
-            out1.push_back(a[i]);
-            out2.push_back('0');
-        }
         else {
-            out1.push_back(a[i]);
-            out2.push_back(b[i]);
-        }
-        find(i+1, diff, out1, out2);
-    }
-    else { // b < a
-        if (a[i] == '?' && b[i] == '?') {
             out1.push_back('0');
             out2.push_back('9');
         }
-        else if (a[i] == '?') {
-            out1.push_back('0');
-            out2.push_back(b[i]);
-        }
-        else if (b[i] == '?') {
-            out1.push_back(a[i]);
-            out2.push_back('9');
-        }
-        else {
-            out1.push_back(a[i]);
-            out2.push_back(b[i]);
-        }
-        find(i+1, diff, out1, out2);
     }
+    else if (a[i] == '?') {
+        if (diff < 0 ) out1.push_back('9');
+        else out1.push_back('0');
+        out2.push_back(b[i]);
+    }
+    else if (b[i] == '?') {
+        out1.push_back(a[i]);
+        if (diff < 0) out2.push_back('0');
+        else out2.push_back('9');
+    }
+    else {
+        out1.push_back(a[i]);
+        out2.push_back(b[i]);
+    }
+    find(i+1, diff, out1, out2);
 }
 
 void solve() {
-
     cin >> a >> b;
     size = a.size();
 
