@@ -2,13 +2,11 @@
 // Problem B. Slides!
 #include <cstdio>
 #include <iostream>
-#include <vector>
 
 using namespace std;
 
 int n;
 long long m;
-vector<long long> v;
 const char *ZERO = "00000000000000000000000000000000000000000000000000";
 const char  *ONE = "11111111111111111111111111111111111111111111111111";
 
