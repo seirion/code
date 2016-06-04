@@ -8,7 +8,7 @@ using namespace std;
 const int MOD = 1e9 + 7;
 
 map<char, int> m;
-int comb[9][9] = {0, };
+int comb[9][9] = {0, }; // combination
 
 void pre() {
     int v = 0;
@@ -26,7 +26,7 @@ void pre() {
     }
 }
 
-int aaa(int n) {
+int cases(int n) { // number of cases
     long long r = 0;
     for (int i = 0; i <= n; i++) {
         r += comb[n][i] * (1 << (n-i));
@@ -41,8 +41,8 @@ int main() {
     long long r = 1;
     for (char c : s) {
         int i = m[c];
-        int x = 6 - __builtin_popcount(i); // the number of characters which cover all bits
-        r = r * aaa(x) % MOD;
+        int x = 6 - __builtin_popcount(i); // the number of bits applicable
+        r = r * cases(x) % MOD;
     }
     cout << r << endl;
     return 0;
