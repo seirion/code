@@ -8,7 +8,6 @@ using namespace std;
 const int MOD = 1e9 + 7;
 
 map<char, int> m;
-int comb[9][9] = {0, }; // combination
 
 void pre() {
     int v = 0;
@@ -17,21 +16,14 @@ void pre() {
     for (char x = 'a'; x <= 'z'; x++) m[x] = v++;
     m['-'] = v++;
     m['_'] = v++;
-
-    for (int r = 0; r < 9; r++) {
-        comb[r][0] = 1;
-        for (int c = 1; c <= r; c++) {
-            comb[r][c] = comb[r-1][c-1] + comb[r-1][c];
-        }
-    }
 }
 
-int cases(int n) { // number of cases
-    long long r = 0;
-    for (int i = 0; i <= n; i++) {
-        r += comb[n][i] * (1 << (n-i));
+int power_of_3(int k) {
+    long long r = 1;
+    while (k--) {
+        r = (r * 3) % MOD;
     }
-    return r;
+    return (int)r;
 }
 
 int main() {
@@ -39,11 +31,11 @@ int main() {
     string s; cin >> s;
 
     long long r = 1;
+    int k = 0;
     for (char c : s) {
         int i = m[c];
-        int x = 6 - __builtin_popcount(i); // the number of bits applicable
-        r = r * cases(x) % MOD;
+        k += 6 - __builtin_popcount(i); // the number of bits applicable
     }
-    cout << r << endl;
+    cout << power_of_3(k) << endl;
     return 0;
 }
