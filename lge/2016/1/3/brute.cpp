@@ -1,8 +1,6 @@
 // 짝수 단어
 #include <iostream>
 #include <string>
-#include <vector>
-#include <map>
 
 using namespace std;
 
