@@ -11,7 +11,6 @@ struct T {
     vector<int> p; // parent
     T(int d_ = 0, int c_ = 0, int r_ = 0) : d(d_), c(c_), r(r_) {}
     bool operator <(const T &t) const { return d < t.d; }
-    bool operator >(const T &t) const { return d > t.d; }
 };
 
 int n, q;
@@ -52,19 +51,12 @@ int get_parent_at(int me, int parent_at) {
     if (diff == 0) return me;
 
     if ((diff & (diff-1)) == 0) {
-        int xx = 0;
-        while (diff) {
-        xx++;
-        diff >>= 1;
-        }
-        return tree[me].p[xx-1];
-        //return tree[me].p[__builtin_ctz(diff)];
+        return tree[me].p[__builtin_ctz(diff)];
     }
 
     int index = 0;
     while ((1 << index) < diff) index++;
-    index--;
-    return get_parent_at(tree[me].p[index], parent_at);
+    return get_parent_at(tree[me].p[index-1], parent_at);
 }
 
 int get_common(int a, int b) { // binary search
