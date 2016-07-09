@@ -1,4 +1,6 @@
 
+![설명](https://raw.githubusercontent.com/seirion/code/master/lge/2016/1/5/image.png)
+
 원의 둘레에 N 개의 자리가 있고, 뱀 암컷 또는 수컷이 있다.<br>
 각각이 서로 출발하여 암수가 만나면 전기를 일으키는데,<br>
 서로 가로질러 만나는 경우는 없다<br><br>
