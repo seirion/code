@@ -8,7 +8,7 @@
 using namespace std;
 
 int row, col;
-map<int, int> m; 
+vector<pair<int, int>> m;
 map<int, int> R, C;
 
 void input() {
@@ -20,7 +20,7 @@ void input() {
             if (str[c] == '*') {
                 R[r]++;
                 C[c]++;
-                m[r] = c;
+                m.push_back(make_pair(r, c));
             }
         }
     }
