@@ -2,21 +2,23 @@
 // Making Polygons
 #include <iostream>
 #include <algorithm>
-
-int n;
-int in[50];
+#include <numeric>
 
 using namespace std;
 
-int main() {
-    int sum(0);
+int main(){
+    int n;
     cin >> n;
-    for (int i = 0; i < n; i++) {
-        cin >> in[i];
-        sum += in[i];
+    vector<int> a(n);
+    for (int i = 0;i < n;i++) cin >> a[i];
+    sort(a.begin(), a.end());
+
+    if (a.size() == 1) cout << 2 << endl;
+    else if (a.size() == 2 && a[0] == a[1]) cout << 2 << endl;
+    else {
+        int sum = accumulate(a.begin(), a.end(), 0) - a.back();
+        if (sum <= a.back()) cout << 1 << endl;
+        else cout << 0 << endl;
     }
-    sort(in, in+n);
-    if (sum - in[n-1] <= in[n-1]) cout << 1 << endl;
-    else cout << 0 << endl;
     return 0;
 }
