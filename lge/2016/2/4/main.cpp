@@ -24,14 +24,6 @@ bool comp(const P& a, const P& b) { return a.y == b.y ? a.x < b.x : a.y < b.y; }
 bool comp2(const P& a, const P& b) { return is_left(a - base, b - base); }
 double distance(const P &a, const P &b) { return sqrt((a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y)); }
 
-
-int find(const P &p) {
-    for (int i = 0; i < n; i++) {
-        if (in[i].x == p.x && in[i].y == p.y) return i;
-    }
-    return -1;
-}
-
 double convex_hull(vector<P> &v) {
     if (v.size() <= 1) return .0;
     if (v.size() == 2) return distance(v[0], v[1]) * 2;
