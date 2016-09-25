@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int n, org, depth;
+int n, org;
 vector<int> v, out;
 map<int, int> k;
 map<int, int> mm; // for count
@@ -23,6 +23,7 @@ bool valid() {
     int ccc = 0;
 
     for (auto it = m.rbegin(); it != m.rend(); it++, num++) {
+
         if (it->second.size() != pow2(num)) return false;
         ccc += it->second.size();
     }
@@ -39,8 +40,8 @@ void put(int index, int value) {
 void fill() {
     int index = 1;
     for (auto it = m.rbegin(); it != m.rend(); it++) {
-        auto vv = it->second; 
-        sort(vv.begin(), vv.end());
+        auto &vv = it->second; 
+        //sort(vv.begin(), vv.end());
 
         for (int x : vv) {
             put(index, x);
@@ -63,15 +64,6 @@ int main() {
     for (auto it : mm) {
         m[it.second].push_back(it.first);
     }
-
-#if 0
-    for (auto it : m) {
-        cout << it.first << " :: ";
-        for (auto x : it.second) cout << x << " ";
-        cout << endl;
-    }
-#endif
-    depth = __builtin_ctz(n);
 
     if (!valid()) {
         cout << "NO\n";
