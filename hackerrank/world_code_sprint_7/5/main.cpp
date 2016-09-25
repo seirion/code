@@ -9,7 +9,6 @@ using namespace std;
 
 int n, org;
 vector<int> v, out;
-map<int, int> k;
 map<int, int> mm; // for count
 map<int, vector<int>> m;
 
@@ -50,6 +49,16 @@ void fill() {
     }
 }
 
+bool check_validation() {
+    for (int i = 1; i < org; i++) {
+        int me = out[i];
+        int left = out[i*2];
+        int right = out[i*2+1];
+        if (me != min(left, right) || right <= left) return false;
+    }
+    return true;
+}
+
 int main() {
     cin >> org;
     n = org << 1;
@@ -71,6 +80,12 @@ int main() {
     }
 
     fill();
+
+    if (!check_validation()) {
+        cout << "NO\n";
+        return 0;
+    }
+
     cout << "YES\n";
     for (int i = 1; i < n; i++) cout << out[i] << " ";
     cout << endl;
