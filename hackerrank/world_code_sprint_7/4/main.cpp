@@ -17,19 +17,6 @@ void build() {
     for (int i = 2; i <= 1000000; i++) pre[i] = pre[i-1] * 2 % MOD;
 }
 
-long long fast_power(long long base, long long p) {
-    if (p == 1) return base;
-
-    long long res = fast_power(base, p>>1);
-    res = (res * res) % MOD;
-    if (p & 1) res = res * base;
-    return res % MOD;
-}
-
-long long inv(int a) { // modular multiplicative inverse
-    return fast_power(a, MOD-2);
-}
-
 long long base(int limit) {
     long long r = 1;
     for (int i = 1; i < limit; i++) r = (r * 2 + 1) % MOD;
