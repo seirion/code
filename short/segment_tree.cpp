@@ -20,8 +20,8 @@ void update(int p, int value) {
 int query(int l, int r) { // [l, r)
     int res = 0;
     for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
-        if (l&1) res += t[l++];
-        if (r&1) res += t[--r];
+        if (l&1) res += tree[l++];
+        if (r&1) res += tree[--r];
     }
     return res;
 }
