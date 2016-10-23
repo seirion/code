@@ -1,22 +1,19 @@
 #include <iostream>
 #include <string>
-#include <set>
 
 using namespace std;
 
 const int SIZE = 27;
 string str;
-set<char> s;
 char in[2][13] = {0, };
+char visit[256] = { false, };
 
 
 pair<int, int> where(char c, int row, int col) {
-    int rs = max(0, row-1);
-    int re = min(1, row+1);
     int cs = max(0, col-1);
     int ce = min(12, col+1);
 
-    for (int rr = rs; rr <= re; rr++) {
+    for (int rr = 0; rr <= 1; rr++) {
         for (int cc = cs; cc <= ce; cc++) {
             if (rr == row && cc == col) continue;
             if (in[rr][cc] == c) return make_pair(rr, cc);
@@ -29,21 +26,19 @@ bool go(int index, char current, int row, int col) {
     if (index == SIZE) return true;
     char &now = str[index];
 
-    if (s.find(now) == s.end()) { // not exist
-        int rs = max(0, row-1);
-        int re = min(1, row+1);
+    if (!visit[now]) { // not exist
         int cs = max(0, col-1);
         int ce = min(12, col+1);
 
-        for (int rr = rs; rr <= re; rr++) {
+        for (int rr = 0; rr <= 1; rr++) {
             for (int cc = cs; cc <= ce; cc++) {
                 if (rr == row && cc == col) continue;
                 if (in[rr][cc] != 0) continue;
 
-                s.insert(now);
+                visit[now] = true;
                 in[rr][cc] = now;
                 if (go(index+1, now, rr, cc)) return true;
-                s.erase(now);
+                visit[now] = false;
                 in[rr][cc] = 0;
             }
         }
@@ -57,7 +52,7 @@ bool go(int index, char current, int row, int col) {
 }
 
 bool go() {
-    s.insert(str[0]);
+    visit[str[0]] = true;
     for (int i = 0; i <= 6; i++) {
         in[0][i] = str[0];
         if (go(1, str[0], 0, i)) return true;
