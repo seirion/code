@@ -11,16 +11,14 @@ int main() {
     map<char, vector<int>> m;
     string str; cin >> str;
 
-    for (int i = 0; i < 27; i++) m[str[i]].push_back(i);
+    for (int i = 0; i < 27; i++) {
+        m[str[i]].push_back(i);
+    }
 
     char me;
     vector<int> v;
     for (auto it : m) {
-        if (it.second.size() == 2) {
-            me = it.first;
-            v = it.second;
-            break;
-        }
+        if (it.second.size() == 2) { me = it.first; v = it.second; }
     }
 
     if (v[1] - v[0] == 1) {
@@ -57,7 +55,11 @@ int main() {
         c += inc;
     }
 
-    for (c = 0; c < 13; c++) cout << out[0][c]; cout << endl;
-    for (c = 0; c < 13; c++) cout << out[1][c]; cout << endl;
+    for (r = 0; r < 2; r++) {
+        for (c = 0; c < 13; c++) {
+            cout << out[r][c];
+        }
+        cout << endl;
+    }
     return 0;
 }
