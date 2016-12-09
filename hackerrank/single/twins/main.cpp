@@ -1,7 +1,6 @@
 // https://www.hackerrank.com/contests/w26/challenges/twins
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 const int LIMIT = 31623; //sqrt(1e9) == 31622.8
@@ -18,7 +17,6 @@ bool is_prime(int p) {
 
 void build() {
     prime.push_back(3);
-    int t = 3;
     for (int i = 5; i < LIMIT; i += 2) {
         if (is_prime(i)) prime.push_back(i);
     }
