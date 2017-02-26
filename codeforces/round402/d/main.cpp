@@ -12,13 +12,14 @@ char s[200001], t[200001];
 int in[200000];
 int n, tsize;
 set<int> v[26];
-set<int> ss;
+vector<int> vv;
 
 int get(int ch, int from) {
     auto it = v[ch].lower_bound(from);
 
     while (it != v[ch].end()) {
-        if (ss.find(*it) == ss.end()) return *it;
+        auto xx = lower_bound(vv.begin(), vv.end(), *it);
+        if (xx == vv.end() || *xx != *it) return *it;
         it++;
     }
     return -1;
@@ -34,8 +35,9 @@ bool ok(int from) {
 }
 
 bool possible(int x) {
-    ss.clear();
-    for (int i = 0; i < x; i++) ss.insert(in[i]);
+    vv.clear();
+    for (int i = 0; i < x; i++) vv.push_back(in[i]);
+    sort(vv.begin(), vv.end());
     return ok(0);
 }
 
