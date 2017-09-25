@@ -1,12 +1,14 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <set>
 
 using namespace std;
 
 class T { public:
     T(int p_, int cost_) : p(p_), cost(cost_) {}
     int p, cost; // position, cost
+    bool operator <(const T& t) const { return p < t.p; }
 };
 
 int n, day, m;
@@ -26,18 +28,25 @@ void input() {
 }
 
 void solve() {
-    vector<T> v;
-    v.push_back(T(1, 0));
+    set<T> v;
+    v.insert(T(1, 0));
 
     for (int d = 0; d < day; d++) {
-        vector<T> temp;
-        for (T &t : v) {
+        set<T> temp;
+        for (const T &t : v) {
             int from = t.p;
             for (auto &to : in[from]) {
                 auto &vv = to.second;
                 int size = vv.size();
                 if (size != 0 && vv[d % size] != 0) {
-                    temp.push_back(T(to.first, t.cost + vv[d % size]));
+                    
+                    T node(to.first, t.cost + vv[d % size]);
+                    auto it = temp.find(node);
+                    if (it != temp.end()) {
+                        node.cost = min(node.cost, it->cost);
+                        temp.erase(it);
+                    }
+                    temp.insert(node);
                 }
             }
         }
@@ -45,7 +54,7 @@ void solve() {
     }
 
     int best = 0x7FFFFFFF;
-    for (T &t : v) {
+    for (const T &t : v) {
         if (t.p == 1) {
             best = min(best, t.cost);
         }
