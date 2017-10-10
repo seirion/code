@@ -63,18 +63,15 @@ int lcm(int a, int b) {
 
     if (a == b) return a;
 
-    int mi(0), ma(d[a]);
-
-    while (mi < ma) {
-        int mid = (mi + ma) / 2;
-        int x = climb(a, d[a] - mid);
-        int y = climb(b, d[b] - mid);
-
-        if (x == y) mi = mid + 1;
-        else ma = mid;
+    int bit = 32 - __builtin_clz(d[a]);
+    while (bit >= 0) {
+        if (p[a].size() > bit && p[a][bit] != p[b][bit]) {
+            a = p[a][bit];
+            b = p[b][bit];
+        }
+        bit--;
     }
-
-    return climb(a, d[a] - ma + 1); 
+    return p[a][0];
 }
 
 void solve() {
