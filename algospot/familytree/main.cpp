@@ -54,7 +54,7 @@ int climb(int a, int jump) {
     return a;
 }
 
-int lcm(int a, int b) {
+int lca(int a, int b) { // lowest common ancestor
     if (d[a] < d[b]) {
         b = climb(b, d[b] - d[a]);
     } else {
@@ -78,7 +78,7 @@ void solve() {
     build();
     while (query--) {
         int a, b; scanf("%d %d", &a, &b);
-        int common = lcm(a, b);
+        int common = lca(a, b);
         printf("%d\n", d[a] + d[b] - d[common] * 2);
     }
 }
