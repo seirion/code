@@ -62,7 +62,7 @@ int lcm(int a, int b) {
 
     int bit = 32 - __builtin_clz(d[a]);
     while (--bit >= 0) {
-        if (p[a][bit] > 0 && p[a][bit] != p[b][bit]) {
+        if (p[a][bit] >= 0 && p[a][bit] != p[b][bit]) {
             a = p[a][bit];
             b = p[b][bit];
         }
