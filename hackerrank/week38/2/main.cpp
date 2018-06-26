@@ -4,18 +4,18 @@
 
 using namespace std;
 
-int n, k;
-map<int, int> m;
+long long n, k;
+map<long long, long long> m;
 
 int main() {
     cin >> n >> k;
 
-    for (int i = 0; i < n; i++) {
-        int x; cin >> x;
+    for (long long i = 0; i < n; i++) {
+        long long x; cin >> x;
         m[x - i * k]++;
     }
 
-    int v = 0;
+    long long v = 0;
     for (auto x : m) {
         v = max(v, x.second); 
     }
