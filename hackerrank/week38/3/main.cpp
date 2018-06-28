@@ -22,7 +22,11 @@ void input() {
     cin >> n >> k >> m;
     while (m--) {
         int x, y, v; cin >> x >> y >> v;
-        in[x][y] = in[y][x] = v;
+        if (in[x][y] != 0) {
+            in[x][y] = in[y][x] = min(in[x][y], v);
+        } else {
+            in[x][y] = in[y][x] = v;
+        }
     }
     memset(mini, 0x7f, sizeof(mini));
 }
