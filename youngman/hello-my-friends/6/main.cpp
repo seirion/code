@@ -2,15 +2,65 @@
 #include <cstring>
 #include <vector>
 #include <map>
+#include <list>
 
 using namespace std;
 
 enum { LEFT, TOP, RIGHT, BOTTOM, NUM };
 const int SIZE = 3 * 10000 + 2;
+
+class T {
+public:
+    bool put(int a, int b) { // [a, b]
+        if (v.empty()) {
+            v.push_back(make_pair(a, b));
+            return true;
+        }
+        auto next = v.begin();
+        while (next != v.end() && next->first <= a) next++;
+        //int ka = next->first; int kb = next->second;
+
+        if (next == v.begin()) { // put front
+            v.push_front(make_pair(a, b));
+        } else {
+            auto prev = next;
+            prev--;
+            int aa = prev->first; int bb = prev->second;
+            if (b <= prev->second) return false; // already contains
+            if (a <= prev->second + 1) { // concatenation
+                prev->second = b;
+            } else if (prev->second < a) { // put new one at the end
+                v.insert(next, make_pair(a, b));
+            }
+        }
+
+        // remove next
+        while (next != v.end() && next->first <= b+1) {
+            auto prev = next;
+            prev--;
+            prev->second = max(next->second, b);
+
+            prev++;
+            next++;
+            v.erase(prev);
+        }
+        return true;
+    }
+
+    list<pair<int, int>> v;
+    void print() {
+        printf("%d\n", v.size());
+        for (auto it: v) printf("%d %d    ", it.first, it.second);
+        printf("\n");
+    }
+};
+
 int n;
 map<int, int> w, h; // input caching
 int in[SIZE][NUM]; // input caching
-int board[2000][2000] = {0, };
+int in2[SIZE][NUM]; // input caching
+T wboard[60002];
+T hboard[60002];
 
 inline void counting(map<int, int> &m) {
     int i = 0;
@@ -27,25 +77,22 @@ void input() {
     counting(w);
     counting(h);
     for (int i = 0; i < n; i++) {
-        in[i][LEFT] = w.find(in[i][LEFT])->second;
-        in[i][RIGHT] = w.find(in[i][RIGHT])->second;
-        in[i][TOP] = h.find(in[i][TOP])->second;
-        in[i][BOTTOM] = h.find(in[i][BOTTOM])->second;
+        in2[i][LEFT] = w.find(in[i][LEFT])->second;
+        in2[i][RIGHT] = w.find(in[i][RIGHT])->second;
+        in2[i][TOP] = h.find(in[i][TOP])->second;
+        in2[i][BOTTOM] = h.find(in[i][BOTTOM])->second;
     }
 }
 
-// brute-force
 void solve() {
     vector<bool> result;
     for (int i = n - 1; i >= 0; i--) {
         bool showing = false;
-        for (int a = in[i][LEFT]; a <= in[i][RIGHT]; a++) {
-            for (int b = in[i][TOP]; b <= in[i][BOTTOM]; b++) {
-                if (board[a][b] == 0) {
-                    board[a][b] = i;
-                    showing = true;
-                }
-            }
+        for (int now = in2[i][TOP]; now <= in2[i][BOTTOM]; now++) {
+            if (wboard[now].put(in[i][LEFT], in[i][RIGHT])) showing = true;
+        }
+        for (int now = in2[i][LEFT]; now <= in2[i][RIGHT]; now++) {
+            if (hboard[now].put(in[i][TOP], in[i][BOTTOM])) showing = true;
         }
         result.push_back(showing);
     }
