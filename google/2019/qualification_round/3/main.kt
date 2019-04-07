@@ -43,12 +43,8 @@ fun solve() {
 }
 
 fun clear(out: ArrayList<BigInteger>) {
-    var current = out[out.size - 1]
-    var i = out.size - 2
-    while (i >= 0) {
-        out[i] = out[i].divide(current)
-        current = out[i]
-        i--
+    for (i in out.size - 2 downTo 0) {
+        out[i] = out[i].divide(out[i + 1])
     }
 }
 
