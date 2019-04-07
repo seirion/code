@@ -16,13 +16,14 @@ fun solve() {
         readLine()!!.let { s -> response.add(s) }
     }
 
-
-    val s = IntArray(N - B) { i -> 0 }
+    val s = ArrayList<Int>(N - B).apply {
+        repeat(N - B) { add(0) }
+    }
     response.forEachIndexed { row, value ->
         value.forEachIndexed { col, v -> if (v == '1') s[col] += (1 shl row) }
     }
 
-    println((0 until N).toSet().minus(s.toList()).joinToString(" "))
+    println((0 until N).toSet().minus(s).joinToString(" "))
     readLine()
 }
 
