@@ -9,9 +9,9 @@ fun main(args: Array<String>) {
     }
 }
 
+val ZERO = BigInteger("0")
 fun solve() {
     val out = ArrayList<BigInteger>()
-    val ZERO = BigInteger("0")
     var prev = BigInteger("0")
     var next = BigInteger("0")
 
@@ -25,7 +25,7 @@ fun solve() {
             } else {
                 val p = gcd(prev, now)
                 out.add(p)
-                clear(out)
+                determine(out)
                 next = now.divide(p)
             }
         } else {
@@ -42,7 +42,7 @@ fun solve() {
     println("")
 }
 
-fun clear(out: ArrayList<BigInteger>) {
+fun determine(out: ArrayList<BigInteger>) {
     for (i in out.size - 2 downTo 0) {
         out[i] = out[i].divide(out[i + 1])
     }
