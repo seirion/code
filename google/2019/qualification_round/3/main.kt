@@ -1,22 +1,12 @@
 import java.math.BigInteger
 import java.util.*
 
-var n = 0
-var v = emptyList<BigInteger>() // input
-
 fun main(args: Array<String>) {
     val t = readLine()!!.toInt()
     (1..t).forEach {
         print("Case #$it: ")
-        input()
         solve()
     }
-}
-
-fun input() {
-    val temp = readLine()!!.split(" ").map { s -> s.toInt() }
-    n = temp[1]
-    v = readLine()!!.split("\\s".toRegex()).map(::BigInteger)
 }
 
 fun solve() {
@@ -25,7 +15,8 @@ fun solve() {
     var prev = BigInteger("0")
     var next = BigInteger("0")
 
-    v.forEach { now ->
+    readLine()
+    readLine()!!.split("\\s".toRegex()).map(::BigInteger).forEach { now ->
         if (prev == ZERO) { // 0
             out.add(now)
         } else if (next == ZERO) { // not determined
@@ -45,10 +36,8 @@ fun solve() {
     }
     out.add(next)
 
-    val s = TreeSet<BigInteger>()
-    out.forEach { s.add(it) }
     val m = TreeMap<BigInteger, Char>()
-    s.forEachIndexed { i, v -> m[v] = 'A' + i }
+    TreeSet<BigInteger>(out).forEachIndexed { i, v -> m[v] = 'A' + i }
     out.forEach { print(m[it]) }
     println("")
 }
