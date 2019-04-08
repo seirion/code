@@ -36,8 +36,8 @@ fun missing(s: ArrayList<Int>, N: Int): Set<Int> {
     return result
 }
 
-fun bitFlag(size: Int, gap: Int) =
-        ("0".repeat(gap) + "1".repeat(gap))
-                .repeat(size / gap + gap)
+fun bitFlag(size: Int, runLength: Int) =
+        ("0".repeat(runLength) + "1".repeat(runLength))
+                .repeat(size / runLength + runLength)
                 .take(size)
 
