@@ -5,11 +5,7 @@ fun main(args: Array<String>) {
     repeat(t) { solve(it) }
 }
 
-data class Input(
-        val x: Int,
-        val y: Int,
-        val c: Char
-)
+data class Input(val x: Int, val y: Int, val c: Char)
 
 fun solve(num: Int) {
     val (P, _) = readLine()!!.split(" ").map { it.toInt() }
@@ -35,12 +31,12 @@ fun solve(num: Int) {
     xValues[0] = 0
     yValues[0] = 0
 
-    data.forEach {
-        when (it.c) {
-            'W' -> putLess(xValues, it.x)
-            'E' -> putGreater(xValues, it.x)
-            'S' -> putLess(yValues, it.y)
-            else -> putGreater(yValues, it.y)
+    data.forEach { inputData ->
+        when (inputData.c) {
+            'W' -> put(xValues) { it < inputData.x }
+            'E' -> put(xValues) { it > inputData.x }
+            'S' -> put(yValues) { it < inputData.y }
+            else -> put(yValues) { it > inputData.y }
         }
     }
 
@@ -49,15 +45,9 @@ fun solve(num: Int) {
     println("Case #${num + 1}: ${xMax.key} ${yMax.key}")
 }
 
-fun putLess(m: MutableMap<Int, Int>, v: Int) {
+fun put(m: MutableMap<Int, Int>, predicate: (Int) -> Boolean) {
     m.map { it.key }
-            .filter { it < v }
-            .forEach { m[it] = m[it]!! + 1 }
-}
-
-fun putGreater(m: MutableMap<Int, Int>, v: Int) {
-    m.map { it.key }
-            .filter { it > v }
+            .filter(predicate = predicate)
             .forEach { m[it] = m[it]!! + 1 }
 }
 
