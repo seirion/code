@@ -12,7 +12,7 @@ data class Input(
 )
 
 fun solve(num: Int) {
-    val (P, Q) = readLine()!!.split(" ").map { it.toInt() }
+    val (P, _) = readLine()!!.split(" ").map { it.toInt() }
 
     val xValues = TreeMap<Int, Int>()
     val yValues = TreeMap<Int, Int>()
@@ -23,19 +23,13 @@ fun solve(num: Int) {
         val y = yy.toInt()
 
         data.add(Input(x, y, d[0]))
+        xValues[x] = 0
+        yValues[y] = 0
         when (d[0]) {
-            'W' -> {
-                xValues[x - 1] = 0
-            }
-            'E' -> {
-                xValues[x + 1] = 0
-            }
-            'S' -> {
-                yValues[y - 1] = 0
-            }
-            else -> {
-                yValues[y + 1] = 0
-            }
+            'W' -> xValues[x - 1] = 0
+            'E' -> xValues[x + 1] = 0
+            'S' -> yValues[y - 1] = 0
+            else -> yValues[y + 1] = 0
         }
     }
     xValues[0] = 0
@@ -52,7 +46,6 @@ fun solve(num: Int) {
 
     val xMax = xValues.maxBy { it.value }!!
     val yMax = yValues.maxBy { it.value }!!
-
     println("Case #${num + 1}: ${xMax.key} ${yMax.key}")
 }
 
