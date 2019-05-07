@@ -34,11 +34,7 @@ fun solve() {
         }
 
         if (s.size == 1) {
-            when (getWinning(s)) {
-                'S' -> out.append('R')
-                'P' -> out.append('S')
-                else -> out.append('P')
-            }
+            out.append(getWinning(s))
             println(out.toString())
             return
         }
@@ -55,9 +51,9 @@ fun solve() {
 }
 
 fun getWinning(s: Set<Char>): Char {
-    if (s.contains('S')) return 'S'
-    if (s.contains('P')) return 'P'
-    return 'R'
+    if (s.contains('S')) return 'R'
+    if (s.contains('P')) return 'S'
+    return 'P'
 }
 
 fun getNotLosing(s: Set<Char>): Char {
