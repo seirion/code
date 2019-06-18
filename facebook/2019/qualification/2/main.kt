@@ -9,6 +9,6 @@ fun main(args: Array<String>) {
 fun solve(s: String) {
     val empty = s.filter { it == '.' }.count()
     val b = s.filter { it == 'B' }.count()
-    if (empty in 1 until b * 2) println("Y")
+    if ((b == 1 && empty == 1) || (1 <= empty && 2 <= b)) println("Y")
     else println("N")
 }
