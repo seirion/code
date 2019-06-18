@@ -60,7 +60,7 @@ val m = hashMapOf(
         "X|0" to 'X', "X|1" to '1', "X|x" to '1', "X|X" to 'X',
 
         "0^0" to '0', "0^1" to '1', "0^x" to 'x', "0^X" to 'X',
-        "1^0" to '1', "1^1" to '1', "1^x" to 'X', "1^X" to 'x',
+        "1^0" to '1', "1^1" to '0', "1^x" to 'X', "1^X" to 'x',
         "x^0" to 'x', "x^1" to 'X', "x^x" to '0', "x^X" to '1',
         "X^0" to 'X', "X^1" to 'x', "X^x" to '1', "X^X" to '0'
 )
