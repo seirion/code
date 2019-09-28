@@ -14,7 +14,7 @@ bool is_prime(int p) {
 
 void make() {
     prime.push_back(2);
-    for (int i = 3; i < LIMIT; i+=3) {
+    for (int i = 3; i < LIMIT; i+=2) {
         if (is_prime(i)) prime.push_back(i);
     }
 }
