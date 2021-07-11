@@ -1,8 +1,8 @@
 fun main() {
-    println(": ${toInts()}")
+    println(": ${getInts()}")
 }
 
-fun toInt() = readLine()!!.toInt()
-fun toInts() = readLine()!!.split(" ").map { it.toInt() }
-fun toLong() = readLine()!!.toLong()
-fun toLongs() = readLine()!!.split(" ").map { it.toLong() }
+fun getInt() = readLine()!!.toInt()
+fun getInts() = readLine()!!.split(" ").map { it.toInt() }
+fun getLong() = readLine()!!.toLong()
+fun getLongs() = readLine()!!.split(" ").map { it.toLong() }
