@@ -1,9 +1,0 @@
-8
-crt phonebook
-crt phonebook
-crt phonebook
-del phonebook(1)
-del phonebook(2)
-del phonebook
-crt phonebook
-crt phonebook
