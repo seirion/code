@@ -1,3 +1,0 @@
-time a.exe < input.txt > temp.txt
-diff temp.txt output.txt
-rm -f temp.txt

@@ -1,4 +1,0 @@
-3
-two + ten = ivef
-zero * zero = one
-seven + three = net
